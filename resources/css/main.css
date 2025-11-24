@@ -1,0 +1,16 @@
+.game-fullscreen {
+    position: "relative";
+    top: 50;
+    width: "100%";
+    height: "calc(100vh - 50px)"; 
+    overflow: "hidden";
+    border: "1px solid black";
+}
+
+.game-inline {
+    position: "relative";
+    width: "100%";
+    aspectRatio: "16 / 9";
+    overflow: "hidden";
+    border: "1px solid black";
+}
