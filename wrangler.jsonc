@@ -1,4 +1,13 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "compatibility_date": "2022-04-05"
+  "name": "radio13au",
+  "compatibility_date": "2022-04-05",
+  "pages_build_output_dir": "./public",
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "radio13au-r2",
+      "remote": true
+    }
+  ]
 }
