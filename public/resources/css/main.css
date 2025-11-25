@@ -1,0 +1,30 @@
+.game-fullscreen {
+    position: "relative";
+    top: 50;
+    width: "100%";
+    height: "calc(100vh - 50px)"; 
+    overflow: "hidden";
+    border: "1px solid black";
+}
+
+.game-inline {
+    position: "relative";
+    width: "100%";
+    aspectRatio: "16 / 9";
+    overflow: "hidden";
+    border: "1px solid black";
+}
+
+
+.my-pattern-background{
+    background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='objectBoundingBox' width='10%' height='10%' patternTransform='scale(5) rotate(0)'><rect x='0' y='0' width='200%' height='200%' fill='%23694a96ff'/><path d='M0 0h10v10H0z'  stroke-width='1' stroke='none' fill='%23512781ff'/><path d='M10 10h10v10H10z'  stroke-width='1' stroke='none' fill='%23512781ff'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
+    background-repeat: repeat;
+}
+
+.my-animation1{
+    animation: moveBackground1 10s linear infinite;
+}
+@keyframes moveBackground1 {
+    0% {x: 0; y: 0;}
+    100% {x: 20; y: 20;}
+}

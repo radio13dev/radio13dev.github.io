@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -19,7 +19,25 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+    <!-- Create a checkerboard pattern -->
+    <svg style="position: fixed; top:0;left:0; z-index: -1; width: 100vmax; height: 100vmax;"
+        xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <pattern id="checkerboard" width="100" height="100" patternTransform='scale(1) rotate(0)'
+                patternUnits="userSpaceOnUse">
+                <animate attributeName="x" values="0;50" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="y" values="0;50" dur="4s" repeatCount="indefinite" />
+                <rect width="50" height="50" fill="#4f2565ff"></rect>
+                <rect x="50" y="50" width="50" height="50" fill="#4f2565ff"></rect>
+            </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="#8e539dff" />
+        <rect width="100%" height="100%" fill="url(#checkerboard)" />
+    </svg>
+
+
     <img src="resources/images/radio13logo.png" alt="Radio 13 Logo" style="width: 50px;">
+    <img src="/media/logo.png" alt="Demo button" style="width: 50px;">
 
     <h1 class="title">Radio 13</h1>
     <div class="game game-inline" style="width: 100px; height: 100px; background-color: black; margin-bottom: 20px;">
@@ -43,16 +61,19 @@
 
     <!-- Custom GSAP code sources. If I want reusable 'customized' gsap I'll reference it here. -->
     <script src="resources/js/gsap.custom.js"></script>
-    <script src="resources/data/Survivor.WebGL.Dev/TemplateData/setup.js"></script>
+    <script src="resources/js/game-setup.js"></script>
+    <!-- 
+        <script src="/media/Survivor.WebGL.Release/Build/Survivor.WebGL.Release.loader.js" onload="gameOnLoad()"></script> 
+    -->
 
     <!-- Actual code for page.-->
     <script src="" async defer></script>
     <script>
         addEventListener("DOMContentLoaded", (e) => {
             gsap.to('.game', {
-             rotation: 360,
-             duration: 10,
-             ease: 'bounce.out'
+                rotation: 3600,
+                duration: 60,
+                ease: 'bounce.out'
             });
         });
     </script>
