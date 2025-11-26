@@ -11,20 +11,18 @@ connectCableLineSVGs.forEach((svg) => {
         const pathId = `cable-path-${String(cableLineCount).padStart(2, '0')}`;
         path.setAttribute("id", pathId);
         cableLineCount++;
-        path.setAttribute("class", "cable-line draw-line-over-time");
+        path.setAttribute("class", "cable-outline draw-line-over-time");
         // Choose a random end point, which will be on the SVG bounds
         const horizontalEdge = Math.random() < 0.5;
         const verticalEdge = Math.random() < 0.5;
         const endX = horizontalEdge ? (verticalEdge ? 0 : svg.clientWidth) : Math.random() * svg.clientWidth;
         const endY = horizontalEdge ? Math.random() * svg.clientHeight : (verticalEdge ? 0 : svg.clientHeight);
         // Do a random walk 'away' from the center of the SVG to create control points
-        // We have to record the points in a list because we'll need to reverse this to create the actual path.
         let currentX = endX;
         let currentY = endY;
-        const steps = 4;
-        const points = [];
+        const steps = 10;
+        let d = `M ${currentX},${currentY} `;
         for (let step = 0; step < steps; step++) {
-            points.push([currentX, currentY]);
             // Move away from center
             const centerX = svg.clientWidth / 2;
             const centerY = svg.clientHeight / 2;
@@ -33,16 +31,10 @@ connectCableLineSVGs.forEach((svg) => {
             const length = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
             const normX = dirX / length;
             const normY = dirY / length;
-            const moveDistance = 50 + Math.random() * 100;
+            const moveDistance = 50;
             currentX += normX * moveDistance + (Math.random() - 0.5) * 100;
             currentY += normY * moveDistance + (Math.random() - 0.5) * 100;
-        }
-        // Now create the path data string
-        let d = `M ${currentX},${currentY} `;
-        // Add quadratic Bezier curves through the points in reverse order
-        for (let p = points.length - 1; p >= 0; p--) {
-            const [px, py] = points[p];
-            d += `Q ${px},${py} ${px},${py} `;
+            d += `Q ${currentX},${currentY} ${currentX},${currentY} `; 
         }
 
         path.setAttribute("d", d);
@@ -50,7 +42,7 @@ connectCableLineSVGs.forEach((svg) => {
 
         // Also create a cable outline path
         const outlinePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        outlinePath.setAttribute("class", "cable-outline draw-line-over-time");
+        outlinePath.setAttribute("class", "cable-line draw-line-over-time");
         outlinePath.setAttribute("d", d);
         generatedCableDiv.appendChild(outlinePath);
 
