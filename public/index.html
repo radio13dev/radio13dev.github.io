@@ -19,49 +19,112 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-    <!-- Create a checkerboard pattern -->
+    <!-- 
+        Create a checkerboard pattern 
+    -->
     <svg style="position: fixed; top:0;left:0; z-index: -1; width: 100vmax; height: 100vmax;"
         xmlns="http://www.w3.org/2000/svg">
         <defs>
             <pattern id="checkerboard" width="100" height="100" patternTransform='scale(1) rotate(0)'
                 patternUnits="userSpaceOnUse">
-                <animate attributeName="x" values="0;50" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="x" values="0;-50" dur="4s" repeatCount="indefinite" />
                 <animate attributeName="y" values="0;50" dur="4s" repeatCount="indefinite" />
                 <rect width="50" height="50" fill="#4f2565ff"></rect>
                 <rect x="50" y="50" width="50" height="50" fill="#4f2565ff"></rect>
+                <rect x="0" y="50" width="50" height="50" fill="#8e539dff"></rect>
+                <rect x="50" y="" width="50" height="50" fill="#8e539dff"></rect>
+            </pattern>
+            <pattern id="checkerboard2" width="100" height="100" patternTransform='scale(1) rotate(0)'
+                patternUnits="userSpaceOnUse">
+                <animate attributeName="x" values="0;-50" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="y" values="0;50" dur="4s" repeatCount="indefinite" />
+                <rect width="50" height="50" fill="#4f2565ff"></rect>
+                <rect x="50" y="50" width="50" height="50" fill="#4f2565ff"></rect>
+                <rect x="0" y="50" width="50" height="50" fill="#8e539dff"></rect>
+                <rect x="50" y="" width="50" height="50" fill="#8e539dff"></rect>
             </pattern>
         </defs>
         <rect width="100%" height="100%" fill="#8e539dff" />
-        <rect width="100%" height="100%" fill="url(#checkerboard)" />
     </svg>
 
+    <!-- 
+        Mask in front of game. We want to draw a full-screen fill with a circle cut out of the middle-right of it.
+        The position of this should change based on window size, when ratio becomes too 'vertical' move it to the bottom of the display. 
+    -->
+    <!--
+    <div class="area-hug-right-bottom" style="background-color: black;">
+        <div class="game" style="width: 100%;height:100%;">
+            <div id="unity-container">
+                <canvas id="unity-canvas" tabindex="0" style="width: 100px; height: 100px;"></canvas>
+            </div>
+            <div id="loading-cover" style="display:none;">
+                <div id="unity-loading-bar">
+                    <div id="unity-logo"><img src="logo.png"></div>
+                    <div id="unity-progress-bar-empty" style="display: none;">
+                        <div id="unity-progress-bar-full"></div>
+                    </div>
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            <div id="unity-fullscreen-button" style="display: none;"></div>
+        </div>
+    </div>
+    -->
+
+    <!-- Generated cables go here -->
+    <div class="area-hug-left-top" id="generated-cable-div" style="overflow: visible;">
+    </div>
+
+    <svg style="position: fixed; left: 0; top: 0; width: 100%; height: 100%;">
+        <circle class="edge-hug-right-bottom" cx="100%" cy="50%" r="60vmin" fill="url(#checkerboard)" />
+        <circle class="edge-hug-right-bottom" onclick="alert('click!')" cx="100%" cy="50%" r="20vmin" fill="#8e539dff" />
+    </svg>
+
+    <!-- Buttons for different UIs -->
+    <div class="ui-buttons vertical-layout-group area-hug-left-top">
+        <svg class="connect-cable-lines" style="width:max(30vmin,100%);height:20vmin;overflow: visible;">
+            <defs>
+                <g id="cable-tip">
+                    <rect rx="0px" ry="0px" width="20px" height="10px"  />
+                    <rect x="20px" y="2px" rx="0px" ry="0px" width="10px" height="5px"  />
+                </g>
+            </defs>
+            <!-- 'Cable' lines that animate and connect to each of the buttons -->
+            <path class="cable-line draw-line-over-time" id="cable-path-00" d="m 138 -231 q 22 60 -39 62 q -43 0 -40 44 q 3 41 24 37 q 21 -5 10 -16 q -30 -25 -34 22 q -8 63 13 40 q 28 -27 1 -29 q -58 -2 -38 76"/>
+            <path class="cable-outline draw-line-over-time" d="m 138 -231 q 22 60 -39 62 q -43 0 -40 44 q 3 41 24 37 q 21 -5 10 -16 q -30 -25 -34 22 q -8 63 13 40 q 28 -27 1 -29 q -58 -2 -38 76"/>
+            <use href="#cable-tip" class="follow-path-over-time" path-to-follow="#cable-path-00" />
+
+            <!-- Actual button fill -->
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%" class="button-text">
+                GAME
+            </text>
+            <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+        </svg>
+        <svg style="width:max(30vmin,100%);height:20vmin;">
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%" class="button-text">INFO</text>
+        </svg>
+        <svg style="width:max(30vmin,100%);height:20vmin;">
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%" class="button-text">CONTACT</text>
+        </svg>
+        
+    </div>
 
     <img src="resources/images/radio13logo.png" alt="Radio 13 Logo" style="width: 50px;">
     <img src="/media/logo.png" alt="Demo button" style="width: 50px;">
 
-    <h1 class="title">Radio 13</h1>
-    <div class="game game-inline" style="width: 100px; height: 100px; background-color: black; margin-bottom: 20px;">
-        <div id="unity-container">
-            <canvas id="unity-canvas" tabindex="0" style="width: 100px; height: 100px;"></canvas>
-        </div>
-        <div id="loading-cover" style="display:none;">
-            <div id="unity-loading-bar">
-                <div id="unity-logo"><img src="logo.png"></div>
-                <div id="unity-progress-bar-empty" style="display: none;">
-                    <div id="unity-progress-bar-full"></div>
-                </div>
-                <div class="spinner"></div>
-            </div>
-        </div>
-        <div id="unity-fullscreen-button" style="display: none;"></div>
-    </div>
-
     <!-- GSAP Code Init. Loading directly from their source to keep repo small. -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathHelper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
 
     <!-- Custom GSAP code sources. If I want reusable 'customized' gsap I'll reference it here. -->
     <script src="resources/js/gsap.custom.js"></script>
     <script src="resources/js/game-setup.js"></script>
+    <script src="resources/js/resize.js" async defer></script>
+    <script src="resources/js/daw-lines-over-time.js"></script>
     <!-- 
         <script src="/media/Survivor.WebGL.Release/Build/Survivor.WebGL.Release.loader.js" onload="gameOnLoad()"></script> 
     -->
@@ -70,11 +133,13 @@
     <script src="" async defer></script>
     <script>
         addEventListener("DOMContentLoaded", (e) => {
+            gsap.registerPlugin(MotionPathHelper,MotionPathPlugin);
             gsap.to('.game', {
                 rotation: 3600,
                 duration: 60,
                 ease: 'bounce.out'
             });
+
         });
     </script>
 </body>

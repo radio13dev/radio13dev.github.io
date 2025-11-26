@@ -1,3 +1,32 @@
+
+.button-text{
+    font: 5vmin 'Trebuchet MS', sans-serif;
+    fill: #f5b42a;
+    text-align: center;
+
+    paint-order: stroke;
+    stroke: #f5b42a;
+    stroke-width: 0px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+}
+
+.cable-line {
+    fill: transparent;
+    stroke: #333;
+    stroke-width: 3px;
+}
+.cable-outline {
+    fill: transparent;
+    stroke: #333;
+    stroke-width: 5px;
+}
+
+.draw-line-over-time {
+    stroke-dasharray: 10000;
+    stroke-dashoffset: 10000;
+}
+
 .game-fullscreen {
     position: "relative";
     top: 50;
@@ -15,6 +44,26 @@
     border: "1px solid black";
 }
 
+.area-hug-left-top {
+    position: fixed; 
+    left: 0%; right: 0%; 
+    top: 0%; bottom: 0%;
+}
+.area-hug-right-bottom {
+    position: fixed; 
+    left: 0%; right: 0%; 
+    top: 0%; bottom: 0%;
+}
+
+.vertical-layout-group {
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
 
 .my-pattern-background{
     background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='objectBoundingBox' width='10%' height='10%' patternTransform='scale(5) rotate(0)'><rect x='0' y='0' width='200%' height='200%' fill='%23694a96ff'/><path d='M0 0h10v10H0z'  stroke-width='1' stroke='none' fill='%23512781ff'/><path d='M10 10h10v10H10z'  stroke-width='1' stroke='none' fill='%23512781ff'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
@@ -27,4 +76,9 @@
 @keyframes moveBackground1 {
     0% {x: 0; y: 0;}
     100% {x: 20; y: 20;}
+}
+
+circle.btn {
+  stroke:#fff;
+  fill:#fff;
 }
