@@ -21,6 +21,11 @@
     stroke: #111;
     stroke-width: 5px;
 }
+.cable-lines-container {
+    width:max(30vmin,100%);
+    height:20vmin;
+    overflow: visible;
+}
 
 .draw-line-over-time {
     stroke-dasharray: 10000;

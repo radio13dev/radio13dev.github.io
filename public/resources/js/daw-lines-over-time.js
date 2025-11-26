@@ -4,6 +4,14 @@ const connectCableLineSVGs = document.querySelectorAll('svg.connect-cable-lines'
 const generatedCableDiv = document.getElementById('generated-cable-div');
 var cableLineCount = 0;
 connectCableLineSVGs.forEach((svg) => {
+    // Create a container div for the generated cable lines
+    // <svg class="connect-cable-lines cable-lines-container">
+    // </svg>
+    const container = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    container.setAttribute("class", "cable-lines-container");
+    container.setAttribute("style", "width:max(30vmin,100%);height:20vmin;overflow: visible;");
+    generatedCableDiv.appendChild(container);
+
     const numberOfCables = Math.floor(Math.random() * 3) + 2; // Between 2 and 4 cables
     for (let i = 0; i < numberOfCables; i++) {
         // Create a new path element
@@ -15,13 +23,13 @@ connectCableLineSVGs.forEach((svg) => {
         // Choose a random end point, which will be on the SVG bounds
         const horizontalEdge = Math.random() < 0.5;
         const verticalEdge = Math.random() < 0.5;
-        const endX = horizontalEdge ? (verticalEdge ? 0 : svg.clientWidth) : Math.random() * svg.clientWidth;
-        const endY = horizontalEdge ? Math.random() * svg.clientHeight : (verticalEdge ? 0 : svg.clientHeight);
+        const endX = 0;//horizontalEdge ? (verticalEdge ? 0 : svg.clientWidth) : Math.random() * svg.clientWidth;
+        const endY = 0;//horizontalEdge ? Math.random() * svg.clientHeight : (verticalEdge ? 0 : svg.clientHeight);
         // Do a random walk 'away' from the center of the SVG to create control points
         let currentX = endX;
         let currentY = endY;
         const steps = 10;
-        let d = `M ${currentX},${currentY} `;
+        let d = `m ${currentX},${currentY} `;
         for (let step = 0; step < steps; step++) {
             // Move away from center
             const centerX = svg.clientWidth / 2;
@@ -34,24 +42,24 @@ connectCableLineSVGs.forEach((svg) => {
             const moveDistance = 50;
             currentX += normX * moveDistance + (Math.random() - 0.5) * 100;
             currentY += normY * moveDistance + (Math.random() - 0.5) * 100;
-            d += `Q ${currentX},${currentY} ${currentX},${currentY} `; 
+            d += `q ${currentX},${currentY} ${currentX},${currentY} `; 
         }
 
         path.setAttribute("d", d);
-        generatedCableDiv.appendChild(path);
+        container.appendChild(path);
 
         // Also create a cable outline path
         const outlinePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
         outlinePath.setAttribute("class", "cable-line draw-line-over-time");
         outlinePath.setAttribute("d", d);
-        generatedCableDiv.appendChild(outlinePath);
+        container.appendChild(outlinePath);
 
         // Finally, create the 'cable tip' that will follow the path
         const cableTip = document.createElementNS("http://www.w3.org/2000/svg", "use");
         cableTip.setAttribute("href", '#cable-tip');
         cableTip.setAttribute("class", "follow-path-over-time");
         cableTip.setAttribute("path-to-follow", `#${pathId}`);
-        generatedCableDiv.appendChild(cableTip);
+        container.appendChild(cableTip);
     }
 });
 
