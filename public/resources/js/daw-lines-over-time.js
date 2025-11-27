@@ -12,8 +12,13 @@ connectCableLineSVGs.forEach((svg) => {
     container.setAttribute("style", "width:max(30vmin,100%);height:20vmin;overflow: visible;");
     generatedCableDiv.appendChild(container);
 
-    const numberOfCables = Math.floor(Math.random() * 3) + 2; // Between 2 and 4 cables
+    const numberOfCables = 1;//Math.floor(Math.random() * 12) + 4; // Between 2 and 4 cables
     for (let i = 0; i < numberOfCables; i++) {
+        //// Create a new group element
+        //const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        //group.setAttribute("transform", "translate(100, 100)");
+        //container.appendChild(group);
+
         // Create a new path element
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         const pathId = `cable-path-${String(cableLineCount).padStart(2, '0')}`;
@@ -23,15 +28,30 @@ connectCableLineSVGs.forEach((svg) => {
         // Choose a random end point, which will be on the SVG bounds
         const horizontalEdge = Math.random() < 0.5;
         const verticalEdge = Math.random() < 0.5;
-        const endX = 0;//horizontalEdge ? (verticalEdge ? 0 : svg.clientWidth) : Math.random() * svg.clientWidth;
-        const endY = 0;//horizontalEdge ? Math.random() * svg.clientHeight : (verticalEdge ? 0 : svg.clientHeight);
+        const endX = horizontalEdge ? (verticalEdge ? 0 : svg.clientWidth*0.8) : Math.random() * svg.clientWidth*0.8;
+        const endY = horizontalEdge ? Math.random() * svg.clientHeight*0.8 : (verticalEdge ? 0 : svg.clientHeight*0.8);
         // Do a random walk 'away' from the center of the SVG to create control points
         let currentX = endX;
         let currentY = endY;
-        const steps = 10;
+        // Determine initial direction away from the edge (should plug in perpendicular to the edge)
+        let nextDirectionX = 0;
+        let nextDirectionY = 0;
+        if (horizontalEdge) {
+            nextDirectionX = (verticalEdge ? -1 : 1)*50;
+        } else {
+            nextDirectionY = (verticalEdge ? -1 : 1)*50;
+        }
+
+        const steps = 5;
         let d = `m ${currentX},${currentY} `;
+
         for (let step = 0; step < steps; step++) {
-            // Move away from center
+            // Create the control point in the current direction
+            d += `q ${nextDirectionX},${nextDirectionY} `;
+            const currentCX = currentX + nextDirectionX;
+            const currentCY = currentY + nextDirectionY;
+
+            // Set the next current position
             const centerX = svg.clientWidth / 2;
             const centerY = svg.clientHeight / 2;
             const dirX = currentX - centerX;
@@ -39,10 +59,27 @@ connectCableLineSVGs.forEach((svg) => {
             const length = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
             const normX = dirX / length;
             const normY = dirY / length;
-            const moveDistance = 50;
-            currentX += normX * moveDistance + (Math.random() - 0.5) * 100;
-            currentY += normY * moveDistance + (Math.random() - 0.5) * 100;
-            d += `q ${currentX},${currentY} ${currentX},${currentY} `; 
+            const moveDistance = 100;
+            const randomDistanceMin = 50;
+            const randomDistanceMax = 300;
+            const randomAngle = Math.random() * Math.PI * 2;
+            const randomDistance = Math.random() * (randomDistanceMax - randomDistanceMin) + randomDistanceMin;
+            const nextX = currentX + normX * moveDistance + Math.cos(randomAngle) * randomDistance;
+            const nextY = currentY + normY * moveDistance + Math.sin(randomAngle) * randomDistance;
+            d += ` ${nextX - currentCX},${nextY - currentCY} `;
+            
+            // Update the direction
+            nextDirectionX = nextX - currentCX;
+            nextDirectionY = nextY - currentCY;
+            const nextLength = Math.sqrt(nextDirectionX * nextDirectionX + nextDirectionY * nextDirectionY) || 1;
+            const randomDirectionDistanceMin = 40;
+            const randomDirectionDistanceMax = 200;
+            const randomDirectionDistance = Math.random() * (randomDirectionDistanceMax - randomDirectionDistanceMin) + randomDirectionDistanceMin;
+            nextDirectionX = (nextDirectionX/nextLength) * randomDirectionDistance;
+            nextDirectionY = (nextDirectionY/nextLength) * randomDirectionDistance;
+
+            currentX = nextX;
+            currentY = nextY;
         }
 
         path.setAttribute("d", d);
@@ -55,7 +92,7 @@ connectCableLineSVGs.forEach((svg) => {
         container.appendChild(outlinePath);
 
         // Finally, create the 'cable tip' that will follow the path
-        const cableTip = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        const cableTip = document.createElementNS("http://www.w3.org/2000/svg", "use",);
         cableTip.setAttribute("href", '#cable-tip');
         cableTip.setAttribute("class", "follow-path-over-time");
         cableTip.setAttribute("path-to-follow", `#${pathId}`);
@@ -72,14 +109,19 @@ paths.forEach((path) => {
     path.style.strokeDasharray = pathLength;
     path.style.strokeDashoffset = pathLength;
     // Animate the stroke-dashoffset to 0 over time to create a drawing effect
-    gsap.to(path.style, {
-        strokeDashoffset: 0,
-        duration: 5, // Duration of the animation in seconds
-        ease: "power1.inOut"
-    });
+    gsap.fromTo(path,
+        {
+            strokeDashoffset: pathLength
+        },
+        {
+            strokeDashoffset: pathLength*2,
+            duration: 5, // Duration of the animation in seconds
+            ease: "power1.out"
+        }
+    );
 });
 
-            
+
 // Now handle the 'follow-path-over-time' class. These objects should set their x/y position along the path over time, with the path chosen by the 'path-to-follow="#path-id"' attribute.
 const followPaths = document.querySelectorAll('.follow-path-over-time');
 followPaths.forEach((obj) => {
@@ -90,13 +132,21 @@ followPaths.forEach((obj) => {
         return;
     }
     // Animate the x/y position of obj along the path over time
-    gsap.to(obj, {
-        motionPath: { path: pathId, align: pathId, autoRotate: true, alignOrigin: [0.5, 0.5] 
-        },
-        transformOrigin: "50% 50%",
-        duration: 5, // Duration of the animation in seconds
-        ease: "power1.inOut",
-    });
+    gsap.to(obj,
+        {
+            motionPath: {
+                path: pathId,
+                align: pathId,
+                autoRotate: true,
+                alignOrigin: [0.5, 0.5],
+                ease: "power1.in",
+                start: 1,
+                end: 0
+            },
+            transformOrigin: "50% 50%",
+            duration: 5, // Duration of the animation in seconds
+        }
+    );
 });
 
 

@@ -82,19 +82,13 @@
 
     <!-- Buttons for different UIs -->
     <div class="ui-buttons vertical-layout-group area-hug-left-top">
-        <svg class="connect-cable-lines cable-lines-container" style="width:max(30vmin,100%);
-    height:20vmin;
-    overflow: visible;">
+        <svg class="cable-lines-container" style="width:max(30vmin,100%); height:20vmin;">
             <defs>
                 <g id="cable-tip">
                     <rect rx="0px" ry="0px" width="20px" height="10px"  />
                     <rect x="20px" y="2px" rx="0px" ry="0px" width="10px" height="5px"  />
                 </g>
             </defs>
-            <!-- 'Cable' lines that animate and connect to each of the buttons -->
-            <path class="cable-outline draw-line-over-time" d="m 138 -231 q 22 60 -39 62 q -43 0 -40 44 q 3 41 24 37 q 21 -5 10 -16 q -30 -25 -34 22 q -8 63 13 40 q 28 -27 1 -29 q -58 -2 -38 76"/>
-            <path class="cable-line draw-line-over-time" id="cable-path-00" d="m 138 -231 q 22 60 -39 62 q -43 0 -40 44 q 3 41 24 37 q 21 -5 10 -16 q -30 -25 -34 22 q -8 63 13 40 q 28 -27 1 -29 q -58 -2 -38 76"/>
-            <use href="#cable-tip" class="follow-path-over-time" path-to-follow="#cable-path-00" />
 
             <!-- Actual button fill -->
             <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
@@ -102,6 +96,16 @@
                 GAME
             </text>
             <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+
+            <!-- 
+                'Cable' lines that animate and connect to each of the buttons 
+                Scale them with vmin so they adjust based on screen size.
+            <g viewbox="0 0 100 100">
+                <path class="cable-outline draw-line-over-time" d="m 100 0 q 22 60 -39 62 q -43 0 -40 44 q 3 41 24 37 q 21 -5 10 -16 q -30 -25 -34 22 q -8 63 13 40 q 28 -27 1 -29 q -58 -2 -75 70"/>
+                <path class="cable-line draw-line-over-time" id="cable-path-00" d="m 50 100 q 22 60 -39 62 q -43 0 -40 44 q 3 41 24 37 q 21 -5 10 -16 q -30 -25 -34 22 q -8 63 13 40 q 28 -27 1 -29 q -58 -2 -75 70"/>
+                <use href="#cable-tip" class="follow-path-over-time" path-to-follow="#cable-path-00" />
+            </g>
+             -->
         </svg>
         <svg style="width:max(30vmin,100%);height:20vmin;">
             <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
@@ -115,7 +119,6 @@
     </div>
 
     <img src="resources/images/radio13logo.png" alt="Radio 13 Logo" style="width: 50px;">
-    <img src="/media/logo.png" alt="Demo button" style="width: 50px;">
 
     <!-- GSAP Code Init. Loading directly from their source to keep repo small. -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>

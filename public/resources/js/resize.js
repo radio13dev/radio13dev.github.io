@@ -11,7 +11,7 @@ function adjustSVGPositions(forceUpdate = false) {
     const height = window.innerHeight;
     const aspectRatio = width / height;
     
-    var newIsPortrait = aspectRatio <= 0.8;
+    var newIsPortrait = aspectRatio <= 0.72;
     if (!forceUpdate && newIsPortrait == isPortrait) {
         // No change in orientation, skip adjustments
         return;
@@ -73,4 +73,14 @@ function adjustSVGPositions(forceUpdate = false) {
         gsap.killTweensOf('.area-hug-left-top');
         gsap.to('.area-hug-left-top', {left:targetLeft, right:targetRight, top:targetTop, bottom:targetBottom, duration: 0.6, ease: "power2.out"});
     }
+
+    // Update all the scale-with-vmin elements
+    // - Evaluate vmin
+    const vmin = Math.min(window.innerWidth, window.innerHeight);
+
+    // - Do scaling
+    const scaleElements = document.querySelectorAll('.scale-with-vmin');
+    scaleElements.forEach((el) => {
+        el.style.transform = 'translate(0) scale(' + (vmin/1000) + ')';
+    });
 }

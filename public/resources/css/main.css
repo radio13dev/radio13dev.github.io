@@ -22,8 +22,6 @@
     stroke-width: 5px;
 }
 .cable-lines-container {
-    width:max(30vmin,100%);
-    height:20vmin;
     overflow: visible;
 }
 
