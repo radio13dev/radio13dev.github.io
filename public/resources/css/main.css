@@ -1,6 +1,6 @@
 
 .button-text{
-    font: 5vmin 'Trebuchet MS', sans-serif;
+    font: 10px 'Trebuchet MS', sans-serif;
     fill: #f5b42a;
     text-align: center;
 
@@ -56,6 +56,12 @@
     position: fixed; 
     left: 0%; right: 0%; 
     top: 0%; bottom: 0%;
+}
+.edge-hug-right-bottom {
+    position: fixed;
+    width: 0; height: 0;
+    right: 100%; bottom: 50%;
+    overflow: "visible";
 }
 
 .vertical-layout-group {

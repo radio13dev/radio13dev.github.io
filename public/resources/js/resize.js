@@ -24,14 +24,15 @@ function adjustSVGPositions(forceUpdate = false) {
         if (isPortrait) {
             // More vertical layout
             targetCX = "50%";
-            targetCY = "100%";
+            targetCY = "0%";
         } else {
             // More horizontal layout
-            targetCX = "100%";
+            targetCX = "0%";
             targetCY = "50%";
         }
         gsap.killTweensOf('.edge-hug-right-bottom');
-        gsap.to('.edge-hug-right-bottom', {cx: targetCX, cy: targetCY, duration: 0.6, ease: "power2.out"});
+        gsap.to('div.edge-hug-right-bottom', {right: targetCX, bottom: targetCY, duration: 0.6, ease: "power2.out"});
+        //gsap.to('text.edge-hug-right-bottom', {x: targetCX, y: targetCY, duration: 0.6, ease: "power2.out"});
     }
 
     // Right Bottom hugs 2
@@ -72,6 +73,20 @@ function adjustSVGPositions(forceUpdate = false) {
         }
         gsap.killTweensOf('.area-hug-left-top');
         gsap.to('.area-hug-left-top', {left:targetLeft, right:targetRight, top:targetTop, bottom:targetBottom, duration: 0.6, ease: "power2.out"});
+    }
+
+    // Left Top hugs
+    {
+        var targetTransform;
+        if (isPortrait) {
+            // More vertical layout
+            targetTransform = "matrix(0,1,-1,0,0,0)";
+        } else {
+            // More horizontal layout
+            targetTransform = "matrix(1,0,0,1,0,0)";
+        }
+        gsap.killTweensOf('.rotate-hug-right-bottom');
+        gsap.to('.rotate-hug-right-bottom', {transform:targetTransform, duration: 0.6, ease: "power2.out"});
     }
 
     // Update all the scale-with-vmin elements
