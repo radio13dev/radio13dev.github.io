@@ -112,7 +112,6 @@ function updateSpinnerText_Element(newText, textEl) {
 var gameLoadState = 0;
 function gameButtonPress() {
     spinSpinner();
-    startUnityInWorker();
     if (gameLoadState == 0) {
         // Nothing, waiting for ready
     }
@@ -120,7 +119,7 @@ function gameButtonPress() {
         // Update text
         updateSpinnerText("LOADING");
         // Start load
-        //gameOnLoad();
+        gameOnLoad();
         // Iterate
         gameLoadState = 2;
     }
@@ -171,129 +170,6 @@ function loaderReady() {
     spinSpinner();
 }
 
-
-var webgpuVersion;
-var hasWebGL;
-var gpu;
-var hresult;
-    var systemInfo;
-async function startUnityInWorker()
-{
-    if (typeof OffscreenCanvas === 'undefined' || typeof Worker === 'undefined') {
-        console.warn("No offscreencanvas support found")
-        return;
-    }
-
-    // Create worker
-    const worker = new Worker('resources/js/unity-worker.js');
-    
-    // Listen for worker messages
-    worker.addEventListener('message', (e) => {
-      const msg = e.data;
-      if (msg.type === 'progress') {
-        // update UI
-      } else if (msg.type === 'loaded') {
-        // Unity is ready
-      } else if (msg.type === 'error') {
-        console.error('Unity worker error', msg.message);
-      }
-    });
-
-    {var e,
-        r,
-        t,
-        n,
-        o,
-        i = navigator.userAgent + " ",
-        a = [["Firefox", "Firefox"], ["OPR", "Opera"], ["Edg", "Edge"], ["SamsungBrowser", "Samsung Browser"], ["Trident", "Internet Explorer"], ["MSIE", "Internet Explorer"], ["Chrome", "Chrome"], ["CriOS", "Chrome on iOS Safari"], ["FxiOS", "Firefox on iOS Safari"], ["Safari", "Safari"]];
-        function s(e, r, t) {
-            return (e = RegExp(e, "i").exec(r)) && e[t]
-        }
-        for (var l = 0; l < a.length; ++l)
-            if (r = s(a[l][0] + "[/ ](.*?)[ \\)]", i, 1)) {
-                e = a[l][1];
-                break
-            }
-        "Safari" == e && (r = s("Version/(.*?) ", i, 1)),
-        "Internet Explorer" == e && (r = s("rv:(.*?)\\)? ", i, 1) || r);
-        for (var d = [["Windows (.*?)[;)]", "Windows"], ["Android ([0-9_.]+)", "Android"], ["iPhone OS ([0-9_.]+)", "iPhoneOS"], ["iPad.*? OS ([0-9_.]+)", "iPadOS"], ["FreeBSD( )", "FreeBSD"], ["OpenBSD( )", "OpenBSD"], ["Linux|X11()", "Linux"], ["Mac OS X ([0-9_\\.]+)", "MacOS"], ["bot|google|baidu|bing|msn|teoma|slurp|yandex", "Search Bot"]], u = 0; u < d.length; ++u)
-            if (n = s(d[u][0], i, 1)) {
-                t = d[u][1],
-                n = n.replace(/_/g, ".");
-                break
-            }
-        var c;
-        function h() {
-            try {
-                return window.WebAssembly ? WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 5, 3, 1, 0, 1, 10, 13, 1, 11, 0, 65, 0, 65, 0, 65, 1, 252, 11, 0, 11])) ? WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 10, 11, 1, 9, 1, 1, 125, 32, 0, 252, 0, 26, 11])) ? WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 10, 10, 1, 8, 1, 1, 126, 32, 0, 194, 26, 11])) ? WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 10, 9, 1, 7, 0, 65, 0, 253, 15, 26, 11])) ? !!WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 10, 10, 1, 8, 0, 6, 64, 1, 25, 1, 11, 11])) || "wasm-exceptions" : "wasm-simd128" : "sign-extend" : "non-trapping fp-to-int" : "bulk-memory" : "WebAssembly"
-            } catch (e) {
-                return "Exception: " + e
-            }
-        }
-        n = {
-            "NT 5.0": "2000",
-            "NT 5.1": "XP",
-            "NT 5.2": "Server 2003",
-            "NT 6.0": "Vista",
-            "NT 6.1": "7",
-            "NT 6.2": "8",
-            "NT 6.3": "8.1",
-            "NT 10.0": "10"
-        }
-        [n] || n,
-        webgpuVersion = 0,
-        (f = document.createElement("canvas")) && (c = (p = f.getContext("webgl2")) ? 2 : 0, p || (p = f && f.getContext("webgl")) && (c = 1), p && (o = p.getExtension("WEBGL_debug_renderer_info") && p.getParameter(37446) || p.getParameter(7937)), webgpuVersion = navigator.gpu ? 1 : 0);
-        var f = "undefined" != typeof SharedArrayBuffer,
-        p = "object" == typeof WebAssembly && "function" == typeof WebAssembly.compile,
-        g = p && !0 === h();
-        systemInfo = {
-            width: screen.width,
-            height: screen.height,
-            userAgent: i.trim(),
-            browser: e || "Unknown browser",
-            browserVersion: r || "Unknown version",
-            mobile: /Mobile|Android|iP(ad|hone)/.test(navigator.appVersion),
-            os: t || "Unknown OS",
-            osVersion: n || "Unknown OS Version",
-            gpu: o || "Unknown GPU",
-            language: navigator.userLanguage || navigator.language,
-            hasWebGL: c,
-            hasWebGPU: webgpuVersion,
-            hasCursorLock: !!document.body.requestPointerLock,
-            hasFullscreen: !!document.body.requestFullscreen || !!document.body.webkitRequestFullscreen,
-            hasThreads: f,
-            hasWasm: p,
-            hasWasm2023: g,
-            missingWasm2023Feature: g ? null : h(),
-            hasWasmThreads: !1
-        }
-    }
-    webgpuVersion = 0,
-        (f = document.createElement("canvas")) && 
-        (c = (p = f.getContext("webgl2")) ? 2 : 0, 
-        p || (p = f && f.getContext("webgl")) && 
-        (c = 1), 
-        p && (o = p.getExtension("WEBGL_debug_renderer_info") && p.getParameter(37446) || p.getParameter(7937)), 
-        webgpuVersion = navigator.gpu ? 1 : 0);
-        webgpuVersion = webgpuVersion;
-        haswebgl = c;
-        gpu = o;
-
-        hresult = window.WebAssembly ? WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 5, 3, 1, 0, 1, 10, 13, 1, 11, 0, 65, 0, 65, 0, 65, 1, 252, 11, 0, 11])) ? WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 10, 11, 1, 9, 1, 1, 125, 32, 0, 252, 0, 26, 11])) ? WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 10, 10, 1, 8, 1, 1, 126, 32, 0, 194, 26, 11])) ? WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 10, 9, 1, 7, 0, 65, 0, 253, 15, 26, 11])) ? !!WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 2, 1, 0, 10, 10, 1, 8, 0, 6, 64, 1, 25, 1, 11, 11])) || "wasm-exceptions" : "wasm-simd128" : "sign-extend" : "non-trapping fp-to-int" : "bulk-memory" : "WebAssembly";
-
-    // Transfer canvas to offscreen
-    //importScripts('http://127.0.0.1:8788/resources/js/loader2.js');
-    const unityInstance = await createUnityInstance(document.querySelector('#unity-canvas'), 
-        config,
-        (progress) => {
-
-        }
-    );
-    //const offscreen = document.querySelector('#unity-canvas').transferControlToOffscreen();
-    //worker.postMessage({ type: 'init', canvas: offscreen, config, loaderUrl: 'http://127.0.0.1:8788/resources/js/loader2.js' }, [offscreen]);
-
-}
-
 function gameOnLoad() {
     createUnityInstance(canvas, config, (progress) => {
         container.style.display = "none";
@@ -309,12 +185,16 @@ function gameOnLoad() {
 
         // Play animation that hides loading cover over time
         gameLoadState = 3;
-        updateSpinnerText("PLAY");
-        spinSpinner();
 
         gsap.killTweensOf(loadingCover);
-        gsap.timeline().to(loadingCover, {transform:"matrix(-1,0,0,1,0,0)", duration: 0.6, ease: "power2.out"}
-        ).set(loadingCover, { display: "none" });
+        gsap.timeline().to(loadingCover, {transform:"matrix(-1,0,0,1,0,0)", delay: 1, duration: 1, ease: "back.out", onComplete: () => {
+        updateSpinnerText("PLAY");
+        spinSpinner();}}
+        ).set(loadingCover, 
+            { 
+            display: "none" 
+            
+        });
 
         // Setup fullscreen button
         if (canFullscreen) {
