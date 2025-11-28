@@ -186,71 +186,7 @@ function createUnityInstance(r, t, l) {
         }
     }
     g.SystemInfo = function () {
-        var e,
-        r,
-        t,
-        n,
-        o,
-        i = navigator.userAgent + " ",
-        a = [["Firefox", "Firefox"], ["OPR", "Opera"], ["Edg", "Edge"], ["SamsungBrowser", "Samsung Browser"], ["Trident", "Internet Explorer"], ["MSIE", "Internet Explorer"], ["Chrome", "Chrome"], ["CriOS", "Chrome on iOS Safari"], ["FxiOS", "Firefox on iOS Safari"], ["Safari", "Safari"]];
-        function s(e, r, t) {
-            return (e = RegExp(e, "i").exec(r)) && e[t]
-        }
-        for (var l = 0; l < a.length; ++l)
-            if (r = s(a[l][0] + "[/ ](.*?)[ \\)]", i, 1)) {
-                e = a[l][1];
-                break
-            }
-        "Safari" == e && (r = s("Version/(.*?) ", i, 1)),
-        "Internet Explorer" == e && (r = s("rv:(.*?)\\)? ", i, 1) || r);
-        for (var d = [["Windows (.*?)[;)]", "Windows"], ["Android ([0-9_.]+)", "Android"], ["iPhone OS ([0-9_.]+)", "iPhoneOS"], ["iPad.*? OS ([0-9_.]+)", "iPadOS"], ["FreeBSD( )", "FreeBSD"], ["OpenBSD( )", "OpenBSD"], ["Linux|X11()", "Linux"], ["Mac OS X ([0-9_\\.]+)", "MacOS"], ["bot|google|baidu|bing|msn|teoma|slurp|yandex", "Search Bot"]], u = 0; u < d.length; ++u)
-            if (n = s(d[u][0], i, 1)) {
-                t = d[u][1],
-                n = n.replace(/_/g, ".");
-                break
-            }
-        function h() {
-            try {
-                return hresult
-            } catch (e) {
-                return "Exception: " + e
-            }
-        }
-        n = {
-            "NT 5.0": "2000",
-            "NT 5.1": "XP",
-            "NT 5.2": "Server 2003",
-            "NT 6.0": "Vista",
-            "NT 6.1": "7",
-            "NT 6.2": "8",
-            "NT 6.3": "8.1",
-            "NT 10.0": "10"
-        }
-        [n] || n;
-        var f = "undefined" != typeof SharedArrayBuffer,
-        p = "object" == typeof WebAssembly && "function" == typeof WebAssembly.compile,
-        g = p && !0 === h();
-        return {
-            width: 1920,//screen.width,
-            height: 1080,//screen.height,
-            userAgent: i.trim(),
-            browser: e || "Unknown browser",
-            browserVersion: r || "Unknown version",
-            mobile: /Mobile|Android|iP(ad|hone)/.test(navigator.appVersion),
-            os: t || "Unknown OS",
-            osVersion: n || "Unknown OS Version",
-            gpu: gpu || "Unknown GPU",
-            language: navigator.userLanguage || navigator.language,
-            hasWebGL: hasWebGL,
-            hasWebGPU: webgpuVersion,
-            hasCursorLock: false,//!!document.body.requestPointerLock,
-            hasFullscreen: false,//!!document.body.requestFullscreen || !!document.body.webkitRequestFullscreen,
-            hasThreads: f,
-            hasWasm: p,
-            hasWasm2023: g,
-            missingWasm2023Feature: g ? null : h(),
-            hasWasmThreads: !1
-        }
+        return systemInfo;
     }
     (),
     g.abortHandler = function (e) {
@@ -385,9 +321,9 @@ function createUnityInstance(r, t, l) {
         t,
         n = performance.now(),
         p = (new Promise(function (i, e) {
-                importScripts(g.frameworkUrl);
-                try
-                {
+                var a = document.createElement("script");
+                a.src = g.frameworkUrl,
+                a.onload = function () {
                     if ("undefined" == typeof unityFramework || !unityFramework) {
                         var e,
                         r = [["br", "br"], ["gz", "gzip"]];
@@ -403,11 +339,38 @@ function createUnityInstance(r, t, l) {
                     unityFramework = null,
                     a.onload = null,
                     i(o)
-                }
-                catch (e)
-                {
+                },
+                a.onerror = function (e) {
                     d("Unable to load file " + g.frameworkUrl + "! Check that the file exists on the remote server. (also check browser Console and Devtools Network tab to debug)", "error")
-                }
+                },
+                document.body.appendChild(a),
+                g.deinitializers.push(function () {
+                    document.body.removeChild(a)
+                }) 
+
+                //importScripts(g.frameworkUrl);
+                //try
+                //{
+                //    if ("undefined" == typeof unityFramework || !unityFramework) {
+                //        var e,
+                //        r = [["br", "br"], ["gz", "gzip"]];
+                //        for (e in r) {
+                //            var t,
+                //            n = r[e];
+                //            if (g.frameworkUrl.endsWith("." + n[0]))
+                //                return t = "Unable to parse " + g.frameworkUrl + "!", "file:" == location.protocol ? void d(t + " Loading pre-compressed (brotli or gzip) content via a file:// URL without a web server is not supported by this browser. Please use a local development web server to host compressed Unity content, or use the Unity Build and Run option.", "error") : (t += ' This can happen if build compression was enabled but web server hosting the content was misconfigured to not serve the file with HTTP Response Header "Content-Encoding: ' + n[1] + '" present. Check browser Console and Devtools Network tab to debug.', "br" == n[0] && "http:" == location.protocol && (n = -1 != ["localhost", "127.0.0.1"].indexOf(location.hostname) ? "" : "Migrate your server to use HTTPS.", t = /Firefox/.test(navigator.userAgent) ? "Unable to parse " + g.frameworkUrl + '!<br>If using custom web server, verify that web server is sending .br files with HTTP Response Header "Content-Encoding: br". Brotli compression may not be supported in Firefox over HTTP connections. ' + n + ' See <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1670675">https://bugzilla.mozilla.org/show_bug.cgi?id=1670675</a> for more information.' : "Unable to parse " + g.frameworkUrl + '!<br>If using custom web server, verify that web server is sending .br files with HTTP Response Header "Content-Encoding: br". Brotli compression may not be supported over HTTP connections. Migrate your server to use HTTPS.'), void d(t, "error"))
+                //        }
+                //        d("Unable to parse " + g.frameworkUrl + "! The file is corrupt, or compression was misconfigured? (check Content-Encoding HTTP Response Header on web server)", "error")
+                //    }
+                //    var o = unityFramework;
+                //    unityFramework = null,
+                //    a.onload = null,
+                //    i(o)
+                //}
+                //catch (e)
+                //{
+                //    d("Unable to load file " + g.frameworkUrl + "! Check that the file exists on the remote server. (also check browser Console and Devtools Network tab to debug)", "error")
+                //}
             }).then(function (e) {
                 g.webAssemblyTimeStart = performance.now(),
                 e(g),

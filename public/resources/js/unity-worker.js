@@ -1,5 +1,4 @@
 var buildUrl;
-var canvasInfo;
 var webgpuVersion;
 var hasWebGL;
 var gpu;
@@ -11,7 +10,6 @@ self.addEventListener('message', async (e) => {
     try {
       // Import Unity loader inside worker (path must be reachable and CORS-friendly)
       buildUrl = msg.config.buildUrl;
-      canvasInfo = msg.config.canvasInfo;
       webgpuVersion = msg.config.webgpuVersion;
       haswebgl = msg.config.hasWebGL;
       gpu = msg.config.gpu;
