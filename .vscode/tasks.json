@@ -6,7 +6,7 @@
         {
             "label": "Delete Uploaded Game",
             "type": "shell",
-            "command": "aws s3 rm s3://radio13au-r2/game/ --endpoint-url https://2ff85e4a7b98df295713377e6e90c6be.r2.cloudflarestorage.com --recursive --dryrun",
+            "command": "aws s3 rm s3://radio13au-r2/game/ --endpoint-url https://2ff85e4a7b98df295713377e6e90c6be.r2.cloudflarestorage.com --recursive",
             "presentation": {
                 "close": true
             }
@@ -14,7 +14,7 @@
         {
             "label": "Upload Game",
             "type": "shell",
-            "command": "aws s3 cp 'C:\\Work Repos\\Boto.Survivor\\Builds\\WebGL\\Survivor.WebGL.Release' s3://radio13au-r2/game/ --recursive --endpoint-url https://2ff85e4a7b98df295713377e6e90c6be.r2.cloudflarestorage.com",
+            "command": "aws s3 cp 'C:\\Work Repos\\Boto.Survivor\\Builds\\WebGL\\Release\\Survivor.WebGL' s3://radio13au-r2/game/ --recursive --endpoint-url https://2ff85e4a7b98df295713377e6e90c6be.r2.cloudflarestorage.com",
             "presentation": {
                 "close": true
             }
@@ -24,6 +24,26 @@
             "dependsOn": [
                 "Delete Uploaded Game",
                 "Upload Game"
+            ],
+            "dependsOrder": "sequence",
+            "presentation": {
+                "close": true
+            }
+        },
+
+        {
+            "label": "Upload Game DEV",
+            "type": "shell",
+            "command": "aws s3 cp 'C:\\Work Repos\\Boto.Survivor\\Builds\\WebGL\\Dev\\Survivor.WebGL' s3://radio13au-r2/game/ --recursive --endpoint-url https://2ff85e4a7b98df295713377e6e90c6be.r2.cloudflarestorage.com",
+            "presentation": {
+                "close": true
+            }
+        },
+        {
+            "label": "Reupload Game DEV",
+            "dependsOn": [
+                "Delete Uploaded Game",
+                "Upload Game DEV"
             ],
             "dependsOrder": "sequence",
             "presentation": {

@@ -1,5 +1,47 @@
 
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.click-through {
+    pointer-events: none; /* Make the overlay click-throughable */
+}
+
+.click-through-end {
+    pointer-events: auto; /* Make the overlay click-throughable */
+}
+
+.button {
+    cursor: pointer;
+}
+
+.button .button-outline {
+    stroke: #f5b42a;
+    stroke-width: 0px;
+}
+.selected .button-outline {
+    stroke: #b88925;
+    stroke-width: 2px;
+}
+.button:hover .button-outline {
+    stroke: #f5b42a;
+    stroke-width: 2px;
+}
+
 .button-text{
+    font: 20px 'Trebuchet MS', sans-serif;
+    fill: #f5b42a;
+    text-align: center;
+
+    paint-order: stroke;
+    stroke: #f5b42a;
+    stroke-width: 0px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+}
+.spinner-text{
     font: 10px 'Trebuchet MS', sans-serif;
     fill: #f5b42a;
     text-align: center;
@@ -9,6 +51,13 @@
     stroke-width: 0px;
     stroke-linecap: butt;
     stroke-linejoin: miter;
+}
+
+.tab-selected{
+    display: none
+}
+.selected .tab-selected{
+    display: block
 }
 
 .cable-line {
@@ -60,7 +109,13 @@
 .edge-hug-right-bottom {
     position: fixed;
     width: 0; height: 0;
-    right: 100%; bottom: 50%;
+    right: 0%; bottom: 50%;
+    overflow: "visible";
+}
+.edge-hug-left-top {
+    position: fixed;
+    width: 0; height: 0;
+    left: 0%; top: 50%;
     overflow: "visible";
 }
 

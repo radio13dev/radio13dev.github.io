@@ -1,11 +1,13 @@
+const DEVMODE = false;
+
 const hideFullScreenButton = "";
-const buildUrl = "/media/Survivor.WebGL.Release";
-const loaderUrl = buildUrl + "/Build/Survivor.WebGL.Release.loader.js";
+const buildUrl = "/media/game";
+const loaderUrl = buildUrl + "/Build/Survivor.WebGL.loader.js";
 const config = {
     buildUrl: buildUrl,
-    dataUrl: buildUrl + "/Build/Survivor.WebGL.Release.data.br",
-    frameworkUrl: buildUrl + "/Build/Survivor.WebGL.Release.framework.js.br",
-    codeUrl: buildUrl + "/Build/Survivor.WebGL.Release.wasm.br",
+    dataUrl: buildUrl + "/Build/Survivor.WebGL.data.br",
+    frameworkUrl: buildUrl + "/Build/Survivor.WebGL.framework.js.br",
+    codeUrl: buildUrl + "/Build/Survivor.WebGL.wasm.br",
     streamingAssetsUrl: buildUrl + "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "Boto.Survivor",
@@ -38,9 +40,8 @@ if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
     container.className = "unity-mobile";
     config.devicePixelRatio = window.devicePixelRatio; // Changed from 1
 }
-loadingCover.style.display = "";
 
-function spinSpinner() {
+function spinSpinner(toFastDuration = 0.2, fastDuration = 0.1, toSlowDuration = 1) {
     // We'll animate the group's transform attribute directly: set transform="rotate(angle cx cy)"
     // This avoids issues with GSAP's svgOrigin/transformOrigin and matches the working manual transform approach.
     const spinner = document.querySelector('#spinner');
@@ -76,104 +77,88 @@ function spinSpinner() {
     gsap.killTweensOf(spinTween);
     gsap.to(spinTween, {
         timeScale: speedFactor,
-        duration: 0.2,
+        duration: toFastDuration,
         ease: 'circ.out'
     });
     gsap.to(spinTween, {
         timeScale: 1,
-        duration: 1,
-        delay: 0.3,
+        duration: toSlowDuration,
+        delay: toFastDuration + fastDuration,
         ease: 'circ.out'
     });
 }
 
+var currentSpinnerText;
 function updateSpinnerText(newText) {
     // The spinner text elements should only be updated when the elements are off screen (i.e., not visible to the user).
     // We'll keep trying until each spinner has been updated.
+    currentSpinnerText = newText;
     const spinnerTexts = document.querySelectorAll('.spinner-text');
-    spinnerTexts.forEach(textEl => updateSpinnerText_Element(newText, textEl));
+    spinnerTexts.forEach(textEl => updateSpinnerText_Element(textEl));
 }
 
-function updateSpinnerText_Element(newText, textEl) {
+function updateSpinnerText_Element(textEl) {
     // Check if the element is visible on screen
     const rect = textEl.getBoundingClientRect();
     if (rect.bottom < 0 || rect.top > window.innerHeight ||
         rect.right < 0 || rect.left > window.innerWidth) {
         // Element is off screen, safe to update
-        textEl.textContent = newText;
+        textEl.textContent = currentSpinnerText;
     } else {
         // Element is on screen, try again after a short delay
         setTimeout(() => {
-            updateSpinnerText_Element(newText, textEl);
+            updateSpinnerText_Element(textEl);
         }, 100);
     }
 }
 
-var gameLoadState = 0;
+var gameLoadState = -1;
+var circleExpandTL;
+var circleShrinkTL;
+var gShrinkTL;
+var leftTopOffsetTL;
+
 function gameButtonPress() {
     spinSpinner();
     if (gameLoadState == 0) {
         // Nothing, waiting for ready
     }
     else if (gameLoadState == 1) {
-        // Update text
-        updateSpinnerText("LOADING");
-        // Start load
+        setGameLoadState(2);
+        // Start load. Not doing this from the game state thing because that's mostly for animations.
         gameOnLoad();
-        // Iterate
-        gameLoadState = 2;
     }
     else if (gameLoadState == 2) {
         // Nothing, controlled by gameOnLoad();
     }
     else if (gameLoadState == 3) {
-
-        // Transition to game full screen:
-        gsap.timeline().to("circle.expand-on-game-start",
-            {
-                r: "*=4",
-                duration: 1,
-                ease: 'circ.in',
-            }
-        ).set("circle.expand-on-game-start", { display: "none" })
-            .set(".disable-on-game-start", { display: "none" });
-
-        gsap.timeline().to("circle.shrink-on-game-start",
-            {
-                r: 0,
-                duration: 1,
-                ease: 'circ.in',
-            }
-        ).set("circle.shrink-on-game-start", { display: "none" });
-
-        gsap.timeline().fromTo("g.shrink-on-game-start",
-            {
-                transformOrigin: "50% 50%",
-                scale: 1
-            },
-            {
-                transformOrigin: "50% 50%",
-                scale: 0,
-                duration: 1,
-                ease: 'circ.in'
-            }
-        ).set("g.shrink-on-game-start", { display: "none" });
-
-        // Iterate, this UI will probably hide now.
-        gameLoadState = 4;
+        setGameLoadState(4);
+    }
+    else if (gameLoadState == 4) {
+        setGameLoadState(3);
     }
 }
 
 function loaderReady() {
-    gameLoadState = 1;
+    setGameLoadState(1);
     updateSpinnerText("GAME");
     spinSpinner();
+    document.querySelector("#game-button").classList.add("button");
 }
 
 function gameOnLoad() {
+    if (DEVMODE)
+    {
+        container.style.display = "none";
+        var len = progressBar.getTotalLength();
+        progressBar.style.strokeDasharray = len;
+        progressBar.style.strokeDashoffset = len; // Only load to the 0.75 mark
+        gsap.timeline().fromTo(progressBar, { strokeDashoffset: len }, { strokeDashoffset: len*1.75, duration: 2, onComplete: () => setGameState(1) } );
+        return;
+    }
+    
     createUnityInstance(canvas, config, (progress) => {
         container.style.display = "none";
-        loadingCover.style.display = "";
         var len = progressBar.getTotalLength();
         progressBar.style.strokeDasharray = len;
         progressBar.style.strokeDashoffset = len + (progress * len * 0.75); // Only load to the 0.75 mark
@@ -225,20 +210,157 @@ function gameOnLoad() {
     });
 }
 
-// METHODS UNITY CAN CALL
-function ReportGameState(state) {
-    // When game reports a '1' loading is done.
-    gsap.killTweensOf(progressBar);
-    gsap.timeline()
-        .to(progressBar.style, { strokeDashoffset: progressBar.getTotalLength() * 2, duration: 0.5 })
-        .to(loadingCover, {
-            transform: "matrix(-1,0,0,1,0,0)", delay: 1, duration: 1, ease: "back.in",
-            onComplete: () => {
-                // Play animation that hides loading cover over time
-                gameLoadState = 3;
-                updateSpinnerText("PLAY");
-                spinSpinner();
+function setGameState(state){
+        setGameLoadState(3);
+        spinSpinner();
+        
+        // When game reports a '1' loading is done.
+        gsap.killTweensOf(progressBar);
+        gsap.timeline().to(progressBar.style, { strokeDashoffset: progressBar.getTotalLength() * 2, duration: 0.5 });
+}
 
+function setGameLoadState(state){
+    if (gameLoadState == state) return;
+
+    gameLoadState = state;
+
+    var gameButton = document.querySelector("#game-button");
+    if (gameLoadState == 0){
+        // Update text
+        updateSpinnerText("LOADING");
+        // Initial state has disabled button
+        gameButton.classList.remove("button");
+        gameButton.classList.add("button-loading");
+    }
+    else if (gameLoadState == 1){
+        // Update text
+        updateSpinnerText("GAME");
+        // Enable the button
+        gameButton.classList.add("button");
+        gameButton.classList.remove("button-loading");
+    }
+    else if (gameLoadState == 2){
+        // Update text
+        updateSpinnerText("LOADING");
+        // Disable button
+        gameButton.classList.remove("button");
+        gameButton.classList.add("button-loading");
+
+        gsap.killTweensOf(progressBar);
+        loadingCover.style.display = "";
+        gsap.timeline()
+            .to(loadingCover, {
+                transformOrigin: "70 50%", rotation: "+=180", duration: 0.8, ease: "back.out"
+            });
+    }
+    else if (gameLoadState == 3){
+        // Update text
+        updateSpinnerText("PLAY");
+        // Enable button
+        gameButton.classList.add("button");
+        gameButton.classList.remove("button-loading");
+
+        // If if the anims exist, reverse them
+        if (circleExpandTL && !circleExpandTL.reversed()) circleExpandTL.reverse();
+        if (circleShrinkTL && !circleShrinkTL.reversed()) circleShrinkTL.reverse();
+        if (gShrinkTL && !gShrinkTL.reversed()) gShrinkTL.reverse();
+        if (leftTopOffsetTL && !leftTopOffsetTL.reversed()) leftTopOffsetTL.reverse();
+        if (adjustSVGPositions) adjustSVGPositions(true);
+    }
+    else if (gameLoadState == 4){
+        // Button doesn't need changing
+
+        // Transition to game full screen:
+        if (progressBar.style.display != "none")
+        {
+            spinSpinner(0.2, 5, 0.3);
+            gsap.killTweensOf(progressBar);
+            gsap.timeline()
+                .to(loadingCover, {
+                    transformOrigin: "70 50%", rotation: "+=180", duration: 0.6, ease: "back.in",
+                    onComplete: () => {
+                        // Play animation that hides loading cover over time
+                        loadingCover.style.display = "none";
+                        initEnterGameAnimation();
+                    }
+                }).set(loadingCover, { display: "none" });
+        }
+        else
+            initEnterGameAnimation();
+        
+        function initEnterGameAnimation()
+        {
+            if (circleExpandTL){
+                if (circleExpandTL.reversed()) circleExpandTL.play();
             }
-        }).set(loadingCover, { display: "none" });
+            else{
+                circleExpandTL = gsap.timeline();
+                circleExpandTL.to("circle.expand-on-game-start",
+                    {
+                        r: "*=4",
+                        duration: 1,
+                        ease: 'circ.in',
+                    }
+                ).set("circle.expand-on-game-start", { display: "none" })
+                .set(".disable-on-game-start", { display: "none" });
+            }
+
+            if (circleShrinkTL){
+                if (circleShrinkTL.reversed()) circleShrinkTL.play();
+            }
+            else{
+                circleShrinkTL = gsap.timeline();
+                circleShrinkTL.to("circle.shrink-on-game-start",
+                {
+                    r: 0,
+                    duration: 1,
+                    ease: 'circ.in',
+                })
+                .set("circle.shrink-on-game-start", { display: "none" });
+            }
+
+            if (gShrinkTL){
+                if (gShrinkTL.reversed()) gShrinkTL.play();
+            }
+            else{
+                gShrinkTL = gsap.timeline();
+                gShrinkTL.fromTo("g.shrink-on-game-start",
+                {
+                    transformOrigin: "50% 50%",
+                    scale: 1
+                },
+                {
+                    transformOrigin: "50% 50%",
+                    scale: 0,
+                    duration: 1,
+                    ease: 'circ.in'
+                }
+                ).set("g.shrink-on-game-start", { display: "none" });
+            }
+
+            if (leftTopOffsetTL){
+                if (leftTopOffsetTL.reversed()) leftTopOffsetTL.play();
+            }
+            else{
+                leftTopOffsetTL = gsap.timeline();
+                leftTopOffsetTL.to(".game-state-offset-left-top",
+                    {
+                        left: "-100%",
+                        top: "-100%",
+                        duration: 1,
+                        ease: 'circ.in',
+                    }
+                );
+            }
+            if (adjustSVGPositions) adjustSVGPositions(true);
+        }
+    }
+}
+
+// Init
+setGameLoadState(0);
+
+if (DEVMODE)
+{
+    loaderReady();
 }
