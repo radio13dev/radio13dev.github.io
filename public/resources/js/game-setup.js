@@ -1,4 +1,4 @@
-const DEVMODE = true;
+const DEVMODE = false;
 
 const hideFullScreenButton = "";
 const buildUrl = "/media/game";
@@ -159,7 +159,6 @@ function gameOnLoad() {
     
     createUnityInstance(canvas, config, (progress) => {
         container.style.display = "none";
-        loadingCover.style.display = "";
         var len = progressBar.getTotalLength();
         progressBar.style.strokeDasharray = len;
         progressBar.style.strokeDashoffset = len + (progress * len * 0.75); // Only load to the 0.75 mark

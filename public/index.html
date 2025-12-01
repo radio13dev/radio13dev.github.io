@@ -17,7 +17,7 @@
 <body>
     <script>
         var lastTabSelected;
-        function tabClicked(element){
+        function tabClicked(element) {
             if (lastTabSelected) lastTabSelected.classList.remove("selected");
             lastTabSelected = element;
             lastTabSelected.classList.add("selected");
@@ -68,7 +68,8 @@
     position: fixed; 
     left: 0%; right: 0%; 
     top: 0%; bottom: 0%;">
-            <canvas id="unity-canvas" class="click-through-end" tabindex="0" style="width: 100%; height: 100%;"></canvas>
+            <canvas id="unity-canvas" class="click-through-end" tabindex="0"
+                style="width: 100%; height: 100%;"></canvas>
         </div>
         <div id="unity-fullscreen-button" style="display: none;"></div>
     </div>
@@ -84,8 +85,8 @@
             <circle class="disable-on-game-start" id="game-mask" r="10000" fill="#8e539dff"
                 mask="url(#game-mask-cutout)" />
             <g class="button-loading" id="game-button" onclick="gameButtonPress()">
-                <circle class="shrink-on-game-start" r="40" fill="#8e539dff"/>
-                <circle class="shrink-on-game-start button-outline" r="38" fill="transparent" stroke-width="2"/>
+                <circle class="shrink-on-game-start" r="40" fill="#8e539dff" />
+                <circle class="shrink-on-game-start button-outline" r="38" fill="transparent" stroke-width="2" />
             </g>
 
             <!-- Hide loading cover until game has been loaded-->
@@ -107,11 +108,11 @@
             <g id="spinner">
                 <g class="shrink-on-game-start click-through">
                     <text x="0" y="-25" transform="rotate(0 0 0)" text-anchor="middle" dominant-baseline="middle"
-                        class="button-text spinner-text prevent-select">SETTING UP</text>
+                        class="spinner-text prevent-select">SETTING UP</text>
                     <text x="0" y="-25" transform="rotate(120 0 0)" text-anchor="middle" dominant-baseline="middle"
-                        class="button-text spinner-text prevent-select">SETTING UP</text>
+                        class="spinner-text prevent-select">SETTING UP</text>
                     <text x="0" y="-25" transform="rotate(240 0 0)" text-anchor="middle" dominant-baseline="middle"
-                        class="button-text spinner-text prevent-select">SETTING UP</text>
+                        class="spinner-text prevent-select">SETTING UP</text>
                 </g>
             </g>
         </svg>
@@ -119,32 +120,35 @@
 
     <!-- Buttons for different UIs -->
     <div class="area-hug-left-top ui-buttons vertical-layout-group disable-on-game-start">
-                <svg class="cable-lines-container button tab" style="width:max(30vmin,100%); height:20vmin;" onclick="tabClicked(this)" onload="tabClicked(this)">
-                    <defs>
-                        <g id="cable-tip">
-                            <rect rx="0px" ry="0px" width="20px" height="10px" />
-                            <rect x="20px" y="2px" rx="0px" ry="0px" width="10px" height="5px" />
-                        </g>
-                    </defs>
+        <svg class="cable-lines-container button tab" style="width:max(30vmin,100%); height:20vmin;"
+            onclick="tabClicked(this)" onload="tabClicked(this)">
+            <defs>
+                <g id="cable-tip">
+                    <rect rx="0px" ry="0px" width="20px" height="10px" />
+                    <rect x="20px" y="2px" rx="0px" ry="0px" width="10px" height="5px" />
+                </g>
+            </defs>
 
-                    <!-- Actual button fill -->
-                    <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff"/>
-                    <rect rx="10px" ry="10px" x="5%" y="5%" width="90%" height="90%" fill="transparent" class="button-outline"/>
+            <!-- Actual button fill -->
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="transparent" class="button-outline" />
+            <svg viewbox="0 0 100 100">
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%"
+                    class="button-text prevent-select">
+                    GAME
+                </text>
+            </svg>
+            <svg viewbox="0 0 100 100" preserveAspectRatio="xMaxYMid meet">
+                <g class="tab-selected">
+                    <line x1="72" y1="20" x2="72" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="76" y1="20" x2="76" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="80" y1="20" x2="80" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="84" y1="20" x2="84" y2="80" stroke="#f5b42a" stroke-width="2" />
+                </g>
+            </svg>
 
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%"
-                        class="button-text prevent-select">
-                        GAME
-                    </text>
-                    <g class="tab-selected">
-                        <line x1="80%" y1="20%" x2="80%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="82%" y1="20%" x2="82%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="84%" y1="20%" x2="84%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="86%" y1="20%" x2="86%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="88%" y1="20%" x2="88%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                    </g>
 
-                    <!-- 
+            <!-- 
                 'Cable' lines that animate and connect to each of the buttons 
                 Scale them with vmin so they adjust based on screen size.
             <g viewbox="0 0 100 100">
@@ -153,37 +157,45 @@
                 <use href="#cable-tip" class="follow-path-over-time" path-to-follow="#cable-path-00" />
             </g>
              -->
-                </svg>
-                <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab" onclick="tabClicked(this)">
-                    <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
-                    <rect rx="10px" ry="10px" x="5%" y="5%" width="90%" height="90%" fill="transparent" class="button-outline"/>
+        </svg>
+        <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab" onclick="tabClicked(this)">
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="transparent" class="button-outline" />
 
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100"
-                        class="button-text prevent-select">INFO</text>
-                    <g class="tab-selected">
-                        <line x1="80%" y1="20%" x2="80%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="82%" y1="20%" x2="82%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="84%" y1="20%" x2="84%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="86%" y1="20%" x2="86%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="88%" y1="20%" x2="88%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                    </g>
-                </svg>
-                <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab" onclick="tabClicked(this)">
-                    <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
-                    <rect rx="10px" ry="10px" x="5%" y="5%" width="90%" height="90%" fill="transparent" class="button-outline"/>
+            <svg viewbox="0 0 100 100">
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="300"
+                    class="button-text prevent-select">
+                    INFO
+                </text>
+            </svg>
+            <svg viewbox="0 0 100 100" preserveAspectRatio="xMaxYMid meet">
+                <g class="tab-selected">
+                    <line x1="72" y1="20" x2="72" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="76" y1="20" x2="76" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="80" y1="20" x2="80" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="84" y1="20" x2="84" y2="80" stroke="#f5b42a" stroke-width="2" />
+                </g>
+            </svg>
+        </svg>
+        <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab" onclick="tabClicked(this)">
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
+            <rect rx="10px" ry="10px" width="100%" height="100%" fill="transparent" class="button-outline" />
 
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100"
-                        class="button-text prevent-select">CONTACT</text>
-                    <g class="tab-selected">
-                        <line x1="80%" y1="20%" x2="80%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="82%" y1="20%" x2="82%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="84%" y1="20%" x2="84%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="86%" y1="20%" x2="86%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="88%" y1="20%" x2="88%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                        <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                    </g>
-                </svg>
+            <svg viewbox="0 0 100 100">
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%"
+                    class="button-text prevent-select">
+                    CONTACT
+                </text>
+            </svg>
+            <svg viewbox="0 0 100 100" preserveAspectRatio="xMaxYMid meet">
+                <g class="tab-selected">
+                    <line x1="72" y1="20" x2="72" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="76" y1="20" x2="76" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="80" y1="20" x2="80" y2="80" stroke="#f5b42a" stroke-width="2" />
+                    <line x1="84" y1="20" x2="84" y2="80" stroke="#f5b42a" stroke-width="2" />
+                </g>
+            </svg>
+        </svg>
     </div>
 
     <img src="resources/images/radio13logo.png" alt="Radio 13 Logo" style="width: 50px;">

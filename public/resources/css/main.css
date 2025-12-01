@@ -31,6 +31,17 @@
 }
 
 .button-text{
+    font: 20px 'Trebuchet MS', sans-serif;
+    fill: #f5b42a;
+    text-align: center;
+
+    paint-order: stroke;
+    stroke: #f5b42a;
+    stroke-width: 0px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+}
+.spinner-text{
     font: 10px 'Trebuchet MS', sans-serif;
     fill: #f5b42a;
     text-align: center;
