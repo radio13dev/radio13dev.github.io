@@ -1,11 +1,11 @@
 const hideFullScreenButton = "";
-const buildUrl = "/media/Survivor.WebGL.Release";
-const loaderUrl = buildUrl + "/Build/Survivor.WebGL.Release.loader.js";
+const buildUrl = "/media/Survivor.WebGL";
+const loaderUrl = buildUrl + "/Build/Survivor.WebGL.loader.js";
 const config = {
     buildUrl: buildUrl,
-    dataUrl: buildUrl + "/Build/Survivor.WebGL.Release.data.br",
-    frameworkUrl: buildUrl + "/Build/Survivor.WebGL.Release.framework.js.br",
-    codeUrl: buildUrl + "/Build/Survivor.WebGL.Release.wasm.br",
+    dataUrl: buildUrl + "/Build/Survivor.WebGL.data.br",
+    frameworkUrl: buildUrl + "/Build/Survivor.WebGL.framework.js.br",
+    codeUrl: buildUrl + "/Build/Survivor.WebGL.wasm.br",
     streamingAssetsUrl: buildUrl + "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "Boto.Survivor",
@@ -223,22 +223,4 @@ function gameOnLoad() {
     }).catch((message) => {
         alert(message);
     });
-}
-
-// METHODS UNITY CAN CALL
-function ReportGameState(state) {
-    // When game reports a '1' loading is done.
-    gsap.killTweensOf(progressBar);
-    gsap.timeline()
-        .to(progressBar.style, { strokeDashoffset: progressBar.getTotalLength() * 2, duration: 0.5 })
-        .to(loadingCover, {
-            transform: "matrix(-1,0,0,1,0,0)", delay: 1, duration: 1, ease: "back.in",
-            onComplete: () => {
-                // Play animation that hides loading cover over time
-                gameLoadState = 3;
-                updateSpinnerText("PLAY");
-                spinSpinner();
-
-            }
-        }).set(loadingCover, { display: "none" });
 }
