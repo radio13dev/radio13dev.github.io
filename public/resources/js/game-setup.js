@@ -1,5 +1,5 @@
 const hideFullScreenButton = "";
-const buildUrl = "http://127.0.0.1:8788/media/Survivor.WebGL.Release";
+const buildUrl = "/media/Survivor.WebGL.Release";
 const loaderUrl = buildUrl + "/Build/Survivor.WebGL.Release.loader.js";
 const config = {
     buildUrl: buildUrl,
@@ -127,7 +127,7 @@ function gameButtonPress() {
         // Nothing, controlled by gameOnLoad();
     }
     else if (gameLoadState == 3) {
-        
+
         // Transition to game full screen:
         gsap.timeline().to("circle.expand-on-game-start",
             {
@@ -136,7 +136,7 @@ function gameButtonPress() {
                 ease: 'circ.in',
             }
         ).set("circle.expand-on-game-start", { display: "none" })
-        .set(".disable-on-game-start", { display: "none" });
+            .set(".disable-on-game-start", { display: "none" });
 
         gsap.timeline().to("circle.shrink-on-game-start",
             {
@@ -148,11 +148,11 @@ function gameButtonPress() {
 
         gsap.timeline().fromTo("g.shrink-on-game-start",
             {
-                transformOrigin:"50% 50%",
+                transformOrigin: "50% 50%",
                 scale: 1
             },
             {
-                transformOrigin:"50% 50%",
+                transformOrigin: "50% 50%",
                 scale: 0,
                 duration: 1,
                 ease: 'circ.in'
@@ -176,25 +176,12 @@ function gameOnLoad() {
         loadingCover.style.display = "";
         var len = progressBar.getTotalLength();
         progressBar.style.strokeDasharray = len;
-        progressBar.style.strokeDashoffset = len + (progress * len);
+        progressBar.style.strokeDashoffset = len + (progress * len * 0.75); // Only load to the 0.75 mark
     }).then((instance) => {
         unityInstance = instance; // store the instance globally
 
         // Display game container
         container.style.display = "";
-
-        // Play animation that hides loading cover over time
-        gameLoadState = 3;
-
-        gsap.killTweensOf(loadingCover);
-        gsap.timeline().to(loadingCover, {transform:"matrix(-1,0,0,1,0,0)", delay: 1, duration: 1, ease: "back.out", onComplete: () => {
-        updateSpinnerText("PLAY");
-        spinSpinner();}}
-        ).set(loadingCover, 
-            { 
-            display: "none" 
-            
-        });
 
         // Setup fullscreen button
         if (canFullscreen) {
@@ -236,4 +223,22 @@ function gameOnLoad() {
     }).catch((message) => {
         alert(message);
     });
+}
+
+// METHODS UNITY CAN CALL
+function ReportGameState(state) {
+    // When game reports a '1' loading is done.
+    gsap.killTweensOf(progressBar);
+    gsap.timeline()
+        .to(progressBar.style, { strokeDashoffset: progressBar.getTotalLength() * 2, duration: 0.5 })
+        .to(loadingCover, {
+            transform: "matrix(-1,0,0,1,0,0)", delay: 1, duration: 1, ease: "back.in",
+            onComplete: () => {
+                // Play animation that hides loading cover over time
+                gameLoadState = 3;
+                updateSpinnerText("PLAY");
+                spinSpinner();
+
+            }
+        }).set(loadingCover, { display: "none" });
 }
