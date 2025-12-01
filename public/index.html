@@ -15,6 +15,14 @@
 </head>
 
 <body>
+    <script>
+        var lastTabSelected;
+        function tabClicked(element){
+            if (lastTabSelected) lastTabSelected.classList.remove("selected");
+            lastTabSelected = element;
+            lastTabSelected.classList.add("selected");
+        }
+    </script>
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -44,7 +52,7 @@
                 <rect x="50" y="" width="50" height="50" fill="#8e539dff"></rect>
             </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#checkerboard)" onclick="gameButtonPress()"/>
+        <rect width="100%" height="100%" fill="url(#checkerboard)" class="button" onclick="gameButtonPress()" />
     </svg>
 
     <!-- 
@@ -52,25 +60,20 @@
         The position of this should change based on window size, when ratio becomes too 'vertical' move it to the bottom of the display. 
     -->
 
-    <div class="game" style="
-    position: fixed; 
-    left: 0%; right: 0%; 
-    top: 0%; bottom: 0%;" style="background-color: black;">
-        <div id="unity-container" style="
+    <div class="game click-through" style="
     position: fixed; 
     left: 0%; right: 0%; 
     top: 0%; bottom: 0%;">
-            <canvas id="unity-canvas" tabindex="0" style="width: 100%; height: 100%;"></canvas>
+        <div id="unity-container" class="click-through" style="
+    position: fixed; 
+    left: 0%; right: 0%; 
+    top: 0%; bottom: 0%;">
+            <canvas id="unity-canvas" class="click-through-end" tabindex="0" style="width: 100%; height: 100%;"></canvas>
         </div>
         <div id="unity-fullscreen-button" style="display: none;"></div>
     </div>
 
-
-    <!-- Generated cables go here -->
-    <div id="generated-cable-div" class="ui-buttons vertical-layout-group area-hug-left-top">
-    </div>
-
-    <div class="edge-hug-right-bottom">
+    <div class="edge-hug-right-bottom disable-on-game-start">
         <svg width="60vmin" height="60vmin" viewbox="0 0 100 100" style="overflow: visible;">
             <defs>
                 <mask id="game-mask-cutout" mask-type="luminance">
@@ -78,12 +81,16 @@
                     <circle id="game-mask-cutout-inner" class="expand-on-game-start" r="100" fill="black" />
                 </mask>
             </defs>
-            <circle class="disable-on-game-start" id="game-mask" r="10000" fill="#8e539dff" mask="url(#game-mask-cutout)" />
-            <circle class="shrink-on-game-start" id="game-button" r="40" fill="#8e539dff" onclick="gameButtonPress()" />
+            <circle class="disable-on-game-start" id="game-mask" r="10000" fill="#8e539dff"
+                mask="url(#game-mask-cutout)" />
+            <g class="button-loading" id="game-button" onclick="gameButtonPress()">
+                <circle class="shrink-on-game-start" r="40" fill="#8e539dff"/>
+                <circle class="shrink-on-game-start button-outline" r="38" fill="transparent" stroke-width="2"/>
+            </g>
 
             <!-- Hide loading cover until game has been loaded-->
             <g id="unity-loading-cover" transform="rotate(180 0 0)" class="rotate-hug-right-bottom"
-                style="display: hidden;">
+                style="display: none;">
                 <!-- Loading arc: draw an arc from 10deg -> 80deg at radius 70 (inside the annulus between r=100 and r=40) -->
                 <path transform="rotate(-60 0 0)" d="M -75 0 L -65 0" fill="none" stroke="#f5b42a" stroke-width="5"
                     stroke-linecap="round" class="loading-start-arc" />
@@ -98,7 +105,7 @@
                  The inner group 'spinner' is rotated with an SVG animateTransform so the
                  four texts orbit the origin continuously. -->
             <g id="spinner">
-                <g class="shrink-on-game-start">
+                <g class="shrink-on-game-start click-through">
                     <text x="0" y="-25" transform="rotate(0 0 0)" text-anchor="middle" dominant-baseline="middle"
                         class="button-text spinner-text prevent-select">SETTING UP</text>
                     <text x="0" y="-25" transform="rotate(120 0 0)" text-anchor="middle" dominant-baseline="middle"
@@ -111,30 +118,33 @@
     </div>
 
     <!-- Buttons for different UIs -->
-    <div class="ui-buttons vertical-layout-group area-hug-left-top expand-on-game-start">
-        <svg class="cable-lines-container" style="width:max(30vmin,100%); height:20vmin;">
-            <defs>
-                <g id="cable-tip">
-                    <rect rx="0px" ry="0px" width="20px" height="10px" />
-                    <rect x="20px" y="2px" rx="0px" ry="0px" width="10px" height="5px" />
-                </g>
-            </defs>
+    <div class="area-hug-left-top ui-buttons vertical-layout-group disable-on-game-start">
+                <svg class="cable-lines-container button tab" style="width:max(30vmin,100%); height:20vmin;" onclick="tabClicked(this)" onload="tabClicked(this)">
+                    <defs>
+                        <g id="cable-tip">
+                            <rect rx="0px" ry="0px" width="20px" height="10px" />
+                            <rect x="20px" y="2px" rx="0px" ry="0px" width="10px" height="5px" />
+                        </g>
+                    </defs>
 
-            <!-- Actual button fill -->
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
-            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%" class="button-text prevent-select">
-                GAME
-            </text>
-            <g id="SoundBarContainer">
-                <line x1="80%" y1="20%" x2="80%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                <line x1="82%" y1="20%" x2="82%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                <line x1="84%" y1="20%" x2="84%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                <line x1="86%" y1="20%" x2="86%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                <line x1="88%" y1="20%" x2="88%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-                <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
-            </g>
+                    <!-- Actual button fill -->
+                    <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff"/>
+                    <rect rx="10px" ry="10px" x="5%" y="5%" width="90%" height="90%" fill="transparent" class="button-outline"/>
 
-            <!-- 
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%"
+                        class="button-text prevent-select">
+                        GAME
+                    </text>
+                    <g class="tab-selected">
+                        <line x1="80%" y1="20%" x2="80%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="82%" y1="20%" x2="82%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="84%" y1="20%" x2="84%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="86%" y1="20%" x2="86%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="88%" y1="20%" x2="88%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                    </g>
+
+                    <!-- 
                 'Cable' lines that animate and connect to each of the buttons 
                 Scale them with vmin so they adjust based on screen size.
             <g viewbox="0 0 100 100">
@@ -143,18 +153,37 @@
                 <use href="#cable-tip" class="follow-path-over-time" path-to-follow="#cable-path-00" />
             </g>
              -->
-        </svg>
-        <svg style="width:max(30vmin,100%);height:20vmin;">
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
-            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100"
-                class="button-text prevent-select">INFO</text>
-        </svg>
-        <svg style="width:max(30vmin,100%);height:20vmin;">
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
-            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100"
-                class="button-text prevent-select">CONTACT</text>
-        </svg>
+                </svg>
+                <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab" onclick="tabClicked(this)">
+                    <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
+                    <rect rx="10px" ry="10px" x="5%" y="5%" width="90%" height="90%" fill="transparent" class="button-outline"/>
 
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100"
+                        class="button-text prevent-select">INFO</text>
+                    <g class="tab-selected">
+                        <line x1="80%" y1="20%" x2="80%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="82%" y1="20%" x2="82%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="84%" y1="20%" x2="84%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="86%" y1="20%" x2="86%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="88%" y1="20%" x2="88%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                    </g>
+                </svg>
+                <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab" onclick="tabClicked(this)">
+                    <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
+                    <rect rx="10px" ry="10px" x="5%" y="5%" width="90%" height="90%" fill="transparent" class="button-outline"/>
+
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100"
+                        class="button-text prevent-select">CONTACT</text>
+                    <g class="tab-selected">
+                        <line x1="80%" y1="20%" x2="80%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="82%" y1="20%" x2="82%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="84%" y1="20%" x2="84%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="86%" y1="20%" x2="86%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="88%" y1="20%" x2="88%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                        <line x1="90%" y1="20%" x2="90%" y2="80%" stroke="#f5b42a" stroke-width="2" />
+                    </g>
+                </svg>
     </div>
 
     <img src="resources/images/radio13logo.png" alt="Radio 13 Logo" style="width: 50px;">
@@ -170,11 +199,12 @@
     <script src="resources/js/resize.js" async defer></script>
     <script src="resources/js/daw-lines-over-time.js"></script>
 
-    <script src="/media/Survivor.WebGL/Build/Survivor.WebGL.loader.js" onload="loaderReady()"></script>
+    <script src="/media/game/Build/Survivor.WebGL.loader.js" onload="loaderReady()"></script>
 
 
     <!-- Actual code for page.-->
-    <script src="" async defer></script>
+    <script src="" async defer>
+    </script>
     <script>
         addEventListener("DOMContentLoaded", (e) => {
             gsap.registerPlugin(MotionPathHelper, MotionPathPlugin);
