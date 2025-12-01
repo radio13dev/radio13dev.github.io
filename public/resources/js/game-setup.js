@@ -110,6 +110,10 @@ function updateSpinnerText_Element(newText, textEl) {
 }
 
 var gameLoadState = 0;
+var circleExpandTL;
+var circleShrinkTL;
+var gShrinkTL;
+
 function gameButtonPress() {
     spinSpinner();
     if (gameLoadState == 0) {
@@ -129,24 +133,41 @@ function gameButtonPress() {
     else if (gameLoadState == 3) {
 
         // Transition to game full screen:
-        gsap.timeline().to("circle.expand-on-game-start",
-            {
-                r: "*=4",
-                duration: 1,
-                ease: 'circ.in',
-            }
-        ).set("circle.expand-on-game-start", { display: "none" })
+        if (circleExpandTL){
+            if (circleExpandTL.reversed()) circleExpandTL.play();
+        }
+        else{
+            circleExpandTL = gsap.timeline();
+            circleExpandTL.to("circle.expand-on-game-start",
+                {
+                    r: "*=4",
+                    duration: 1,
+                    ease: 'circ.in',
+                }
+            ).set("circle.expand-on-game-start", { display: "none" })
             .set(".disable-on-game-start", { display: "none" });
+        }
 
-        gsap.timeline().to("circle.shrink-on-game-start",
+        if (circleShrinkTL){
+            if (circleShrinkTL.reversed()) circleShrinkTL.play();
+        }
+        else{
+            circleShrinkTL = gsap.timeline();
+            circleShrinkTL.to("circle.shrink-on-game-start",
             {
                 r: 0,
                 duration: 1,
                 ease: 'circ.in',
-            }
-        ).set("circle.shrink-on-game-start", { display: "none" });
-
-        gsap.timeline().fromTo("g.shrink-on-game-start",
+            })
+            .set("circle.shrink-on-game-start", { display: "none" });
+        }
+        
+        if (gShrinkTL){
+            if (gShrinkTL.reversed()) gShrinkTL.play();
+        }
+        else{
+            gShrinkTL = gsap.timeline();
+            gShrinkTL.fromTo("g.shrink-on-game-start",
             {
                 transformOrigin: "50% 50%",
                 scale: 1
@@ -157,10 +178,20 @@ function gameButtonPress() {
                 duration: 1,
                 ease: 'circ.in'
             }
-        ).set("g.shrink-on-game-start", { display: "none" });
+            ).set("g.shrink-on-game-start", { display: "none" });
+        }
 
         // Iterate, this UI will probably hide now.
         gameLoadState = 4;
+    }
+    else if (gameLoadState == 4) {
+        // Reverse the above animation, bring it all back in.
+        if (!circleExpandTL.reversed()) circleExpandTL.reverse();
+        if (!circleShrinkTL.reversed()) circleShrinkTL.reverse();
+        if (!gShrinkTL.reversed()) gShrinkTL.reverse();
+
+        gameLoadState = 3;
+
     }
 }
 
@@ -170,7 +201,24 @@ function loaderReady() {
     spinSpinner();
 }
 
+const DEVMODE = true;
+if (DEVMODE)
+{
+    loaderReady();
+}
+
 function gameOnLoad() {
+    if (DEVMODE)
+    {
+        container.style.display = "none";
+        loadingCover.style.display = "";
+        var len = progressBar.getTotalLength();
+        progressBar.style.strokeDasharray = len;
+        progressBar.style.strokeDashoffset = len; // Only load to the 0.75 mark
+        gsap.timeline().fromTo(progressBar, { strokeDashoffset: len }, { strokeDashoffset: len*1.75, duration: 2, onComplete: () => setGameState(1) } );
+        return;
+    }
+    
     createUnityInstance(canvas, config, (progress) => {
         container.style.display = "none";
         loadingCover.style.display = "";
@@ -223,4 +271,20 @@ function gameOnLoad() {
     }).catch((message) => {
         alert(message);
     });
+}
+
+function setGameState(state){
+        // When game reports a '1' loading is done.
+        gsap.killTweensOf(progressBar);
+        gsap.timeline()
+            .to(progressBar.style, { strokeDashoffset: progressBar.getTotalLength() * 2, duration: 0.5 })
+            .to(loadingCover, {
+                transform: "matrix(1,0,0,1,0,0)", delay: 1, duration: 0.2, ease: "linear",
+                onComplete: () => {
+                    // Play animation that hides loading cover over time
+                    gameLoadState = 3;
+                    updateSpinnerText("PLAY");
+                    spinSpinner();
+                }
+            }).set(loadingCover, { display: "none" });
 }

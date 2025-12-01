@@ -77,6 +77,22 @@ function adjustSVGPositions(forceUpdate = false) {
 
     // Left Top hugs
     {
+        var targetCX, targetCY;
+        if (isPortrait) {
+            // More vertical layout
+            targetCX = "50%";
+            targetCY = "0%";
+        } else {
+            // More horizontal layout
+            targetCX = "0%";
+            targetCY = "50%";
+        }
+        gsap.killTweensOf('.edge-hug-left-top');
+        gsap.to('div.edge-hug-left-top', {left: targetCX, top: targetCY, duration: 0.6, ease: "power2.out"});
+    }
+
+    // Left Top hugs
+    {
         var targetTransform;
         if (isPortrait) {
             // More vertical layout
