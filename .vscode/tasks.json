@@ -76,8 +76,20 @@
             "presentation": {
                 "close": false
             },
-            "type": "shell",
-            "command": "& 'C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.0b8\\Editor\\unity.exe' -projectPath 'C:\\Work Repos\\Boto.Survivor.BuildRepo' -activeBuildProfile 'Assets/Settings/Build Profiles/Web.asset' -executeMethod BuildScript.BuildPlayerAndBundles -logFile 'C:\\Work Repos\\Boto.Survivor.BuildRepo\\Build\\Web\\build_log.txt' -quit -batchmode",
+            "type": "process",
+            "command": "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.0b8\\Editor\\unity.exe",
+            "args": [
+                "-projectPath",
+                "C:\\Work Repos\\Boto.Survivor.BuildRepo",
+                "-activeBuildProfile",
+                "Assets/Settings/Build Profiles/Web.asset",
+                "-executeMethod",
+                "BuildScript.BuildPlayerAndBundles",
+                "-logFile",
+                "C:\\Work Repos\\Boto.Survivor.BuildRepo\\Build\\Web\\build_log.txt",
+                "-quit",
+                "-batchmode"
+            ],
             "problemMatcher": []
         },
 
