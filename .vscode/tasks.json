@@ -11,14 +11,16 @@
                 "close": true
             }
         },
+
         {
             "label": "Upload Game",
             "type": "shell",
-            "command": "aws s3 cp 'C:\\Work Repos\\Boto.Survivor\\Builds\\WebGL\\Release\\Survivor.WebGL' s3://radio13au-r2/game/ --recursive --endpoint-url https://2ff85e4a7b98df295713377e6e90c6be.r2.cloudflarestorage.com",
+            "command": "aws s3 cp 'C:\\Work Repos\\Boto.Survivor.BuildRepo\\Build\\Web\\latest\\Player' s3://radio13au-r2/game/ --recursive --endpoint-url https://2ff85e4a7b98df295713377e6e90c6be.r2.cloudflarestorage.com",
             "presentation": {
                 "close": true
             }
         },
+
         {
             "label": "Reupload Game",
             "dependsOn": [
@@ -32,23 +34,77 @@
         },
 
         {
-            "label": "Upload Game DEV",
+            "label": "Game: Pull main",
             "type": "shell",
-            "command": "aws s3 cp 'C:\\Work Repos\\Boto.Survivor\\Builds\\WebGL\\Dev\\Survivor.WebGL' s3://radio13au-r2/game/ --recursive --endpoint-url https://2ff85e4a7b98df295713377e6e90c6be.r2.cloudflarestorage.com",
+            "command": "cd 'C:\\Work Repos\\Boto.Survivor.BuildRepo' ; git fetch --all ; git reset --hard origin/main ; git clean -fd; git pull origin main",
             "presentation": {
                 "close": true
             }
         },
+
         {
-            "label": "Reupload Game DEV",
+            "label": "Game: Build Dev",
             "dependsOn": [
+                "Game: Pull main"
+            ],
+            "dependsOrder": "sequence",
+            "presentation": {
+                "close": false
+            },
+            "type": "process",
+            "command": "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.0b8\\Editor\\unity.exe",
+            "args": [
+                "-projectPath",
+                "C:\\Work Repos\\Boto.Survivor.BuildRepo",
+                "-activeBuildProfile",
+                "Assets/Settings/Build Profiles/Web.asset",
+                "-executeMethod",
+                "BuildScript.BuildPlayerAndBundles_Dev",
+                "-logFile",
+                "C:\\Work Repos\\Boto.Survivor.BuildRepo\\Build\\Web\\build_log.txt",
+                "-quit",
+                "-batchmode"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Game: Build Release",
+            "dependsOn": [
+                "Game: Pull main"
+            ],
+            "dependsOrder": "sequence",
+            "presentation": {
+                "close": false
+            },
+            "type": "shell",
+            "command": "& 'C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.0b8\\Editor\\unity.exe' -projectPath 'C:\\Work Repos\\Boto.Survivor.BuildRepo' -activeBuildProfile 'Assets/Settings/Build Profiles/Web.asset' -executeMethod BuildScript.BuildPlayerAndBundles -logFile 'C:\\Work Repos\\Boto.Survivor.BuildRepo\\Build\\Web\\build_log.txt' -quit -batchmode",
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Game: Build+Upload Dev",
+            "dependsOn": [
+                "Game: Build Dev",
                 "Delete Uploaded Game",
-                "Upload Game DEV"
+                "Reupload Game"
             ],
             "dependsOrder": "sequence",
             "presentation": {
                 "close": true
             }
-        }
+        },
+
+        {
+            "label": "Game: Build+Upload Release",
+            "dependsOn": [
+                "Game: Build Release",
+                "Delete Uploaded Game",
+                "Reupload Game"
+            ],
+            "dependsOrder": "sequence",
+            "presentation": {
+                "close": true
+            }
+        },
     ]
 }

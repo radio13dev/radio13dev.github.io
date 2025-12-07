@@ -23,3 +23,14 @@ export async function onRequestGet(ctx) {
 
     return response;
 }
+
+export async function onRequestHead(ctx) {
+    const path = new URL(ctx.request.url).pathname.replace("/media/", "");
+    const file = await ctx.env.MEDIA.head(path);
+    if (!file) return new Response(null, { status: 404 });
+    
+
+    var response = new Response(null, { status: 200 });
+
+    return response;
+}

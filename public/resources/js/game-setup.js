@@ -1,14 +1,7 @@
 const DEVMODE = false;
 
 const hideFullScreenButton = "";
-const buildUrl = "/media/game";
-const loaderUrl = buildUrl + "/Build/Survivor.WebGL.loader.js";
 const config = {
-    buildUrl: buildUrl,
-    dataUrl: buildUrl + "/Build/Survivor.WebGL.data.br",
-    frameworkUrl: buildUrl + "/Build/Survivor.WebGL.framework.js.br",
-    codeUrl: buildUrl + "/Build/Survivor.WebGL.wasm.br",
-    streamingAssetsUrl: buildUrl + "StreamingAssets",
     companyName: "DefaultCompany",
     productName: "Boto.Survivor",
     productVersion: "1.0",
@@ -20,6 +13,18 @@ const canvas = document.querySelector("#unity-canvas");
 const loadingCover = document.querySelector("#unity-loading-cover");
 const progressBar = document.querySelector("#unity-loading-bar");
 const fullscreenButton = document.querySelector("#unity-fullscreen-button");
+
+async function checkIfFileExists(url) {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    console.error(response);
+    return response.ok; // true if status is 200-299, false otherwise
+  } catch (error) {
+    // Network error or other issues
+    console.error("Error checking file existence:", error);
+    return false;
+  }
+}
 
 const canFullscreen = (function () {
     for (const key of [
@@ -146,7 +151,7 @@ function loaderReady() {
     document.querySelector("#game-button").classList.add("button");
 }
 
-function gameOnLoad() {
+async function gameOnLoad() {
     if (DEVMODE)
     {
         container.style.display = "none";
@@ -156,8 +161,25 @@ function gameOnLoad() {
         gsap.timeline().fromTo(progressBar, { strokeDashoffset: len }, { strokeDashoffset: len*1.75, duration: 2, onComplete: () => setGameState(1) } );
         return;
     }
-    
-    createUnityInstance(canvas, config, (progress) => {
+
+    // Get correct config based on existing files
+    const buildUrl = "/media/game/Boto.Survivor";
+    config.buildUrl = buildUrl,
+    config.dataUrl = buildUrl + "/Build/Boto.Survivor.data.br",
+    config.frameworkUrl = buildUrl + "/Build/Boto.Survivor.framework.js.br",
+    config.codeUrl = buildUrl + "/Build/Boto.Survivor.wasm.br",
+    config.streamingAssetsUrl = buildUrl + "/StreamingAssets",
+    checkIfFileExists(config.dataUrl).then(exists => {
+        if (exists){
+            // We're good
+        } else {
+            // Setup using the uncompressed files
+        config.dataUrl = buildUrl + "/Build/Boto.Survivor.data";
+        config.frameworkUrl = buildUrl + "/Build/Boto.Survivor.framework.js";
+        config.codeUrl = buildUrl + "/Build/Boto.Survivor.wasm";
+        }
+    }).then(() =>{
+        createUnityInstance(canvas, config, (progress) => {
         container.style.display = "none";
         var len = progressBar.getTotalLength();
         progressBar.style.strokeDasharray = len;
@@ -208,6 +230,9 @@ function gameOnLoad() {
     }).catch((message) => {
         alert(message);
     });
+    });
+    
+    
 }
 
 function setGameState(state){
