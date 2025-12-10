@@ -236,6 +236,8 @@ async function gameOnLoad() {
 }
 
 function setGameState(state){
+        if (gameLoadState != 2) return;
+        
         setGameLoadState(3);
         spinSpinner();
         
