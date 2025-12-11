@@ -135,6 +135,7 @@ function gameButtonPress() {
     }
     else if (gameLoadState == 2) {
         // Nothing, controlled by gameOnLoad();
+        setGameLoadState(3);
     }
     else if (gameLoadState == 3) {
         setGameLoadState(4);
