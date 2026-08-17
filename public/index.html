@@ -54,7 +54,7 @@
                 <rect x="50" y="" width="50" height="50" fill="#8e539dff"></rect>
             </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#checkerboard)" class="button" onclick="gameButtonPress()" />
+        <rect width="100%" height="100%" fill="url(#checkerboard" class="button" />
     </svg>
 
     <!-- 
@@ -73,19 +73,22 @@
             <canvas id="unity-canvas" class="click-through-end" tabindex="0"
                 style="width: 100%; height: 100%;"></canvas>
         </div>
-        <div id="unity-fullscreen-button" style="display: none;"></div>
+        <div id="unity-fullscreen-button" style="display: none;
+        position: fixed; 
+        left: 0%;
+        bottom: 0%;"></div>
     </div>
 
     <div class="edge-hug-right-bottom disable-on-game-start">
         <svg width="60vmin" height="60vmin" viewbox="0 0 100 100" style="overflow: visible;">
-            <defs>
-                <mask id="game-mask-cutout" mask-type="luminance">
-                    <circle r="10000" fill="white" />
-                    <circle id="game-mask-cutout-inner" class="expand-on-game-start" r="100" fill="black" />
-                </mask>
-            </defs>
-            <circle class="disable-on-game-start" id="game-mask" r="10000" fill="#8e539dff"
-                mask="url(#game-mask-cutout)" />
+
+            
+	        <path fill="#8e539dff" class="expand-on-game-start disable-on-game-start" d="M 0 -100 A 1 1 0 0 0 0 100 L 0 400 A 1 1 0 0 1 0 -400 A 1 1 0 0 1 0 400 A 1 1 0 0 1 0 100 A 1 1 0 0 0 0 -100" />
+            
+            <!-- 
+            <circle class="expand-on-game-start" id="game-mask" r="100" fill="url(#checkerboard)" /> 
+             -->
+
             <g class="button-loading" id="game-button" onclick="gameButtonPress()">
                 <circle class="shrink-on-game-start" r="40" fill="#8e539dff" />
                 <circle class="shrink-on-game-start button-outline" r="38" fill="transparent" stroke-width="2" />
@@ -122,7 +125,7 @@
 
     <!-- Buttons for different UIs -->
     <div class="area-hug-left-top ui-buttons vertical-layout-group disable-on-game-start">
-        <svg class="cable-lines-container button tab" style="width:max(30vmin,100%); height:20vmin;"
+        <svg class="cable-lines-container button tab game-tab-donauts" style="width:max(30vmin,100%); height:20vmin;"
             onclick="tabClicked(this)" onload="tabClicked(this)">
             <defs>
                 <g id="cable-tip">
@@ -137,7 +140,7 @@
             <svg viewbox="0 0 100 100">
                 <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%"
                     class="button-text prevent-select">
-                    GAME
+                    Donauts
                 </text>
             </svg>
             <svg viewbox="0 0 100 100" preserveAspectRatio="xMaxYMid meet">
@@ -160,14 +163,14 @@
             </g>
              -->
         </svg>
-        <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab" onclick="tabClicked(this)">
+        <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab game-tab-cell" onclick="tabClicked(this)">
             <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
             <rect rx="10px" ry="10px" width="100%" height="100%" fill="transparent" class="button-outline" />
 
             <svg viewbox="0 0 100 100">
                 <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="300"
                     class="button-text prevent-select">
-                    INFO
+                    Boto.Cell
                 </text>
             </svg>
             <svg viewbox="0 0 100 100" preserveAspectRatio="xMaxYMid meet">
@@ -212,8 +215,6 @@
     <script src="resources/js/game-setup.js"></script>
     <script src="resources/js/resize.js" async defer></script>
     <script src="resources/js/daw-lines-over-time.js"></script>
-
-    <script src="/media/game/Boto.Survivor/Build/Boto.Survivor.loader.js" onload="loaderReady()"></script>
 
 
     <!-- Actual code for page.-->

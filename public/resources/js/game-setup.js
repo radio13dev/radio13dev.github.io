@@ -2,9 +2,7 @@ const DEVMODE = false;
 
 const hideFullScreenButton = "";
 const config = {
-    companyName: "DefaultCompany",
-    productName: "Boto.Survivor",
-    productVersion: "1.0",
+    companyName: "Radio 13 Games",
     preserveDrawingBuffer: true
 };
 
@@ -119,6 +117,7 @@ function updateSpinnerText_Element(textEl) {
 
 var gameLoadState = -1;
 var circleExpandTL;
+var pathExpandTL;
 var circleShrinkTL;
 var gShrinkTL;
 var leftTopOffsetTL;
@@ -152,7 +151,23 @@ function loaderReady() {
     document.querySelector("#game-button").classList.add("button");
 }
 
+function waitUntil(condition, timeoutMs = 5000, intervalMs = 50) {
+    return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        const intervalId = setInterval(() => {
+            if (condition()) {
+                clearInterval(intervalId);
+                resolve();
+            } else if (Date.now() - startTime >= timeoutMs) {
+                clearInterval(intervalId);
+                reject(new Error("Timeout reached while waiting for condition to be true."));
+            }
+        }, intervalMs);
+    });
+}
+
 async function gameOnLoad() {
+
     if (DEVMODE)
     {
         container.style.display = "none";
@@ -164,20 +179,54 @@ async function gameOnLoad() {
     }
 
     // Get correct config based on existing files
-    const buildUrl = "/media/game/Boto.Survivor";
+    config.productName = "Donauts"; // Fallback defaults to this game
+    if (lastTabSelected)
+    {
+        if (lastTabSelected.classList.contains('game-tab-donauts'))
+        {
+            config.productName = "Donauts";
+        }
+        else if (lastTabSelected.classList.contains('game-tab-cell'))
+        {
+            config.productName = "Boto.Cell";
+        }
+    }
+
+    // Load the loader for that game
+    var loadComplete = false;
+    var a = document.createElement("script");
+    a.src = `/media/game/${config.productName}/Build/${config.productName}.loader.js`;
+    a.onload = function () {
+        loadComplete = true;
+    };
+    document.body.appendChild(a);
+
+    // Only continue once loaded
+    try {
+        // Wait until dataLoaded is true, with an optional 5 second timeout
+        await waitUntil(() => loadComplete, 5000); 
+        // Your subsequent code goes here
+    } catch (error) {
+        console.error(error.message); // Will log "Timeout reached..." if the value isn't true in time
+        loaderReady();
+        return;
+    }
+
+    const buildUrl = `/media/game/${config.productName}`;
+    config.productVersion = "1.0";
     config.buildUrl = buildUrl,
-    config.dataUrl = buildUrl + "/Build/Boto.Survivor.data.br",
-    config.frameworkUrl = buildUrl + "/Build/Boto.Survivor.framework.js.br",
-    config.codeUrl = buildUrl + "/Build/Boto.Survivor.wasm.br",
+    config.dataUrl = buildUrl + `/Build/${config.productName}.data.br`,
+    config.frameworkUrl = buildUrl + `/Build/${config.productName}.framework.js.br`,
+    config.codeUrl = buildUrl + `/Build/${config.productName}.wasm.br`,
     config.streamingAssetsUrl = buildUrl + "/StreamingAssets",
     checkIfFileExists(config.dataUrl).then(exists => {
         if (exists){
             // We're good
         } else {
             // Setup using the uncompressed files
-        config.dataUrl = buildUrl + "/Build/Boto.Survivor.data";
-        config.frameworkUrl = buildUrl + "/Build/Boto.Survivor.framework.js";
-        config.codeUrl = buildUrl + "/Build/Boto.Survivor.wasm";
+        config.dataUrl = buildUrl + `/Build/${config.productName}.data`;
+        config.frameworkUrl = buildUrl + `/Build/${config.productName}.framework.js`;
+        config.codeUrl = buildUrl + `/Build/${config.productName}.wasm`;
         }
     }).then(() =>{
         createUnityInstance(canvas, config, (progress) => {
@@ -290,6 +339,7 @@ function setGameLoadState(state){
 
         // If if the anims exist, reverse them
         if (circleExpandTL && !circleExpandTL.reversed()) circleExpandTL.reverse();
+        if (pathExpandTL && !pathExpandTL.reversed()) pathExpandTL.reverse();
         if (circleShrinkTL && !circleShrinkTL.reversed()) circleShrinkTL.reverse();
         if (gShrinkTL && !gShrinkTL.reversed()) gShrinkTL.reverse();
         if (leftTopOffsetTL && !leftTopOffsetTL.reversed()) leftTopOffsetTL.reverse();
@@ -331,6 +381,22 @@ function setGameLoadState(state){
                     }
                 ).set("circle.expand-on-game-start", { display: "none" })
                 .set(".disable-on-game-start", { display: "none" });
+            }
+            if (pathExpandTL){
+                if (pathExpandTL.reversed()) pathExpandTL.play();
+            }
+            else{
+                pathExpandTL = gsap.timeline();
+                pathExpandTL.fromTo("path.expand-on-game-start",
+                    {
+                        transform: "scale(1)"
+                    },
+                    {
+                        transform: "scale(3)",
+                        duration: 1,
+                        ease: 'circ.in',
+                    }
+                ).set("circle.expand-on-game-start", { display: "none" })
             }
 
             if (circleShrinkTL){
@@ -388,7 +454,7 @@ function setGameLoadState(state){
 // Init
 setGameLoadState(0);
 
-if (DEVMODE)
+//if (DEVMODE)
 {
     loaderReady();
 }
