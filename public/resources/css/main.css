@@ -1,148 +1,262 @@
-
-.prevent-select {
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
+/* --- Base Reset & Typography --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Apply Barlow Semi-Bold globally */
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
 }
 
-.click-through {
-    pointer-events: none; /* Make the overlay click-throughable */
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevents scrolling when content slides in */
+
 }
 
-.click-through-end {
-    pointer-events: auto; /* Make the overlay click-throughable */
+
+/* 1. The container needs overflow: hidden so the larger background doesn't spill out */
+.animated-bg {
+  position: relative;
+  overflow: hidden;
+  /* Add your explicit width/height here */
+  width: 100%;
+  height: 100vh;
 }
 
-.button {
-    cursor: pointer;
+/* Add a new class to handle the full-page sizing */
+.animated-bg.full-page {
+  position: fixed; /* Locks it to the screen so you can scroll normally */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -999; /* Sends it to the very back of the entire page */
 }
 
-.button .button-outline {
-    stroke: #f5b42a;
-    stroke-width: 0px;
-}
-.selected .button-outline {
-    stroke: #b88925;
-    stroke-width: 2px;
-}
-.button:hover .button-outline {
-    stroke: #f5b42a;
-    stroke-width: 2px;
-}
-
-.button-text{
-    font: 20px 'Trebuchet MS', sans-serif;
-    fill: #f5b42a;
-    text-align: center;
-
-    paint-order: stroke;
-    stroke: #f5b42a;
-    stroke-width: 0px;
-    stroke-linecap: butt;
-    stroke-linejoin: miter;
-}
-.spinner-text{
-    font: 10px 'Trebuchet MS', sans-serif;
-    fill: #f5b42a;
-    text-align: center;
-
-    paint-order: stroke;
-    stroke: #f5b42a;
-    stroke-width: 0px;
-    stroke-linecap: butt;
-    stroke-linejoin: miter;
+/* 2. Apply the background to a pseudo-element */
+.animated-bg::before {
+  content: "";
+  position: absolute;
+  
+  /* Make the element exactly 100px larger in every direction 
+     so we don't see empty edges when it moves */
+  top: -000px;
+  left: -400px;
+  width: calc(100% + 400px);
+  height: calc(100% + 400px);
+  z-index: -1;
+  
+  /* Your original SVG background */
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(20) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='%23a372f8ff'/><path d='M0 0h10v10H0z' stroke-width='1' stroke='none' fill='%23efa4efff'/><path d='M10 10h10v10H10z' stroke-width='1' stroke='none' fill='%23efa4efff'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
+  
+  /* Apply the new hardware-accelerated animation */
+  animation: slide-diagonal-smooth 10s linear infinite;
+  
+  /* Optional: Forces the browser to put this element on its own GPU layer */
+  will-change: transform;
 }
 
-.tab-selected{
-    display: none
-}
-.selected .tab-selected{
-    display: block
-}
-
-.cable-line {
-    fill: transparent;
-    stroke: #333;
-    stroke-width: 3px;
-}
-.cable-outline {
-    fill: transparent;
-    stroke: #111;
-    stroke-width: 5px;
-}
-.cable-lines-container {
-    overflow: visible;
+/* 3. Animate using transform instead of background-position */
+@keyframes slide-diagonal-smooth {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    /* Moves exactly one tile size (100px). 
+       Using translate3d enables hardware acceleration. */
+    transform: translate3d(400px, -400px, 0); 
+  }
 }
 
-.draw-line-over-time {
-    stroke-dasharray: 10000;
-    stroke-dashoffset: 10000;
+.layout-wrapper {
+    position: relative;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
 }
 
-.game-fullscreen {
-    position: "relative";
-    top: 50;
-    width: "100%";
-    height: "calc(100vh - 50px)"; 
-    overflow: "hidden";
-    border: "1px solid black";
-}
-
-.game-inline {
-    position: "relative";
-    width: "100%";
-    aspectRatio: "16 / 9";
-    overflow: "hidden";
-    border: "1px solid black";
-}
-
-.area-hug-left-top {
-    position: fixed; 
-    left: 0%; right: 0%; 
-    top: 0%; bottom: 0%;
-}
-.area-hug-right-bottom {
-    position: fixed; 
-    left: 0%; right: 0%; 
-    top: 0%; bottom: 0%;
-}
-.edge-hug-right-bottom {
-    position: fixed;
-    width: 0; height: 0;
-    right: 0%; bottom: 50%;
-    overflow: "visible";
-}
-.edge-hug-left-top {
-    position: fixed;
-    width: 0; height: 0;
-    left: 0%; top: 50%;
-    overflow: "visible";
-}
-
-.vertical-layout-group {
-    padding: 5%;
+/* --- Left Sidebar (Checkerboard) --- */
+.sidebar {
+    width: 50%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    justify-content: space-between;
     align-items: center;
+    padding: 40px 20px 20px;
+    z-index: 5; 
+    overflow: auto;
+}
+
+/* Logo specific styling */
+.logo-area {
+    width: 80%;
+    max-height: 24vh;
+    display: flex;
     justify-content: center;
+    align-items: flex-end;
+}
+.logo-text {
+    background-color: #522f5b;
+    display: flex;
+    justify-content: center;
+    color: #ed4899;
+    font-size: max(6vh, 3rem);
+    font-weight: 700;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    white-space: nowrap;
+}
+
+.logo {
+    width: 30%;
+    min-width: 10vh;
+    max-width: 20vh;
+    height: auto;
+    display: block;
+}
+
+/* Navigation Buttons */
+.main-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.nav-btn {
+    color: white;
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    padding: 10px 40px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+/* Footer / Socials */
+.sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-links img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    transition: transform 0.2s;
+}
+
+.social-links a:hover img {
+    transform: scale(1.1);
+}
+
+.attribution {
+    color: white;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+/* --- Right Content Area (The Slider) --- */
+.content-slider {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background-color: #4a3652; /* Dark purple matching image */
+    padding: 40px;
+    color: white;
+    z-index: 10; /* Ensure slider can cover things on mobile */
+    
+    /* Initially hidden off-screen to the right */
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Close Button Styling */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s ease;
+    z-index: 20;
+}
+
+.close-btn:hover {
+    color: white;
+}
+
+.content-title {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.content-panel {
+    display: none; /* Hide all panels by default */
+}
+
+/* --- Interactivity State Logic (No JS) --- */
+
+/* Hide the radio inputs themselves */
+.nav-state {
+    display: none;
+}
+
+/* 1. When ANY content radio is checked, slide the panel in */
+#nav-about:checked ~ .content-slider,
+#nav-games:checked ~ .content-slider,
+#nav-contact:checked ~ .content-slider {
+    transform: translateX(0);
+}
+
+/* 2. Change the background of the selected Nav button */
+#nav-about:checked ~ .sidebar .main-nav label[for="nav-about"],
+#nav-games:checked ~ .sidebar .main-nav label[for="nav-games"],
+#nav-contact:checked ~ .sidebar .main-nav label[for="nav-contact"] {
+    background-color: #4a3652;
+}
+
+/* 3. Show the corresponding content panel inside the slider */
+#nav-about:checked ~ .content-slider .panel-about,
+#nav-games:checked ~ .content-slider .panel-games,
+#nav-contact:checked ~ .content-slider .panel-contact {
+    display: block;
 }
 
 
-.my-pattern-background{
-    background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='objectBoundingBox' width='10%' height='10%' patternTransform='scale(5) rotate(0)'><rect x='0' y='0' width='200%' height='200%' fill='%23694a96ff'/><path d='M0 0h10v10H0z'  stroke-width='1' stroke='none' fill='%23512781ff'/><path d='M10 10h10v10H10z'  stroke-width='1' stroke='none' fill='%23512781ff'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
-    background-repeat: repeat;
-}
+/* --- Mobile / Vertical Screen Adjustments --- */
+@media (max-width: 800px) {
+    .sidebar {
+        width: 100%; /* Sidebar takes up full screen */
+    }
 
-.my-animation1{
-    animation: moveBackground1 10s linear infinite;
-}
-@keyframes moveBackground1 {
-    0% {x: 0; y: 0;}
-    100% {x: 20; y: 20;}
-}
+    .content-slider {
+        width: 100%; /* Slider takes up full screen when active */
+    }
 
-circle.btn {
-  stroke:#fff;
-  fill:#fff;
+    .nav-btn {
+        font-size: 2.5rem; /* Slightly smaller text for mobile */
+    }
+
+    .content-title {
+        font-size: 2.5rem;
+    }
 }

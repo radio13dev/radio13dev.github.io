@@ -246,6 +246,7 @@ async function gameOnLoad() {
                 fullscreenButton.style.display = "";
             }
             fullscreenButton.onclick = () => {
+                console.log("Requesting fullscreen");
                 unityInstance.SetFullscreen(1);
             };
         }

@@ -1,6 +1,13 @@
 export async function onRequestGet(ctx) {
-    const path = new URL(ctx.request.url).pathname.replace("/media/", "");
-    const file = await ctx.env.MEDIA.get(path);
+    console.log("GET request for media: ", ctx.request.url);
+
+    const path = new URL(ctx.request.url).pathname;
+    if (path.startsWith("/media/") == false) {
+        return new Response(null, { status: 404 });
+    }
+
+    const pathClean = path.replace("/media/", "");
+    const file = await ctx.env.MEDIA.get(pathClean);
     if (!file) return new Response(null, { status: 404 });
 
     var response = new Response(file.body, {
@@ -25,8 +32,14 @@ export async function onRequestGet(ctx) {
 }
 
 export async function onRequestHead(ctx) {
-    const path = new URL(ctx.request.url).pathname.replace("/media/", "");
-    const file = await ctx.env.MEDIA.head(path);
+
+    console.log("HEAD request for media: ", ctx.request.url);
+    const path = new URL(ctx.request.url).pathname;
+    if (path.startsWith("/media/") == false) {
+        return new Response(null, { status: 404 });
+    }
+    const pathClean = path.replace("/media/", "");
+    const file = await ctx.env.MEDIA.head(pathClean);
     if (!file) return new Response(null, { status: 404 });
     
 

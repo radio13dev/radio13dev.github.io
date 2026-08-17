@@ -1,0 +1,189 @@
+html, body {
+    width: 100%;
+    height: 100%; /* For general compatibility */
+    min-height: 100vh; /* This is the key for iOS */
+    min-height: 100dvh; /* This is the key for iOS */
+    margin: 0;
+    padding: 0;
+}
+html {
+    background: #8e539dff;
+}
+body {
+  margin: 0;
+  padding:
+    var(--safe-top)
+    var(--safe-right)
+    var(--safe-bottom)
+    var(--safe-left);
+}
+
+:root {
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --safe-left: env(safe-area-inset-left);
+  --safe-right: env(safe-area-inset-right);
+}
+
+.hero {
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.click-through {
+    pointer-events: none; /* Make the overlay click-throughable */
+}
+
+.click-through-end {
+    pointer-events: auto; /* Make the overlay click-throughable */
+}
+
+.button {
+    cursor: pointer;
+}
+
+.button .button-outline {
+    stroke: #f5b42a;
+    stroke-width: 0px;
+}
+.selected .button-outline {
+    stroke: #b88925;
+    stroke-width: 2px;
+}
+.button:hover .button-outline {
+    stroke: #f5b42a;
+    stroke-width: 2px;
+}
+
+.button-text{
+    font: 20px 'Trebuchet MS', sans-serif;
+    fill: #f5b42a;
+    text-align: center;
+
+    paint-order: stroke;
+    stroke: #f5b42a;
+    stroke-width: 0px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+}
+.spinner-text{
+    font: 10px 'Trebuchet MS', sans-serif;
+    fill: #f5b42a;
+    text-align: center;
+
+    paint-order: stroke;
+    stroke: #f5b42a;
+    stroke-width: 0px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+}
+
+.tab-selected{
+    display: none
+}
+.selected .tab-selected{
+    display: block
+}
+
+.cable-line {
+    fill: transparent;
+    stroke: #333;
+    stroke-width: 3px;
+}
+.cable-outline {
+    fill: transparent;
+    stroke: #111;
+    stroke-width: 5px;
+}
+.cable-lines-container {
+    overflow: visible;
+}
+
+.draw-line-over-time {
+    stroke-dasharray: 10000;
+    stroke-dashoffset: 10000;
+}
+
+.game-fullscreen {
+    position: "relative";
+    top: 50;
+    width: "100%";
+    height: "calc(100vh - 50px)"; 
+    overflow: "hidden";
+    border: "1px solid black";
+}
+
+#unity-fullscreen-button {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    width: 38px;
+    height: 38px;
+    background: url('/resources/images/fullscreen-button.png') no-repeat center;
+    background-size: contain;
+}
+
+.game-inline {
+    position: "relative";
+    width: "100%";
+    aspectRatio: "16 / 9";
+    overflow: "hidden";
+    border: "1px solid black";
+}
+
+.area-hug-left-top {
+    position: fixed; 
+    left: 0%; right: 0%; 
+    top: 0%; bottom: 0%;
+}
+.area-hug-right-bottom {
+    position: fixed; 
+    left: 0%; right: 0%; 
+    top: 0%; bottom: 0%;
+}
+.edge-hug-right-bottom {
+    position: fixed;
+    width: 0; height: 0;
+    right: 0%; bottom: 50%;
+    overflow: "visible";
+}
+.edge-hug-left-top {
+    position: fixed;
+    width: 0; height: 0;
+    left: 0%; top: 50%;
+    overflow: "visible";
+}
+
+.vertical-layout-group {
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.my-pattern-background{
+    background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='objectBoundingBox' width='10%' height='10%' patternTransform='scale(5) rotate(0)'><rect x='0' y='0' width='200%' height='200%' fill='%23694a96ff'/><path d='M0 0h10v10H0z'  stroke-width='1' stroke='none' fill='%23512781ff'/><path d='M10 10h10v10H10z'  stroke-width='1' stroke='none' fill='%23512781ff'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
+    background-repeat: repeat;
+}
+
+.my-animation1{
+    animation: moveBackground1 10s linear infinite;
+}
+@keyframes moveBackground1 {
+    0% {x: 0; y: 0;}
+    100% {x: 20; y: 20;}
+}
+
+circle.btn {
+  stroke:#fff;
+  fill:#fff;
+}

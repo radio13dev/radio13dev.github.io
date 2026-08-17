@@ -1,236 +1,88 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Radio 13</title>
+    <title>Radio 13 Games</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="resources/css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <!-- Google Fonts: Barlow Semi-Bold -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/resources/css/main.css">
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
-    <script>
-        var lastTabSelected;
-        function tabClicked(element) {
-            if (lastTabSelected) lastTabSelected.classList.remove("selected");
-            lastTabSelected = element;
-            lastTabSelected.classList.add("selected");
-        }
-    </script>
-    <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+    <div class="animated-bg full-page"></div>
 
-    <!-- 
-        Create a checkerboard pattern 
-    -->
-    <svg style="position: fixed; top:0;left:0; z-index: -1; width: 100vmax; height: 100vmax;"
-        xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <pattern id="checkerboard" width="100" height="100" patternTransform='scale(1) rotate(0)'
-                patternUnits="userSpaceOnUse">
-                <animate attributeName="x" values="0;-50" dur="4s" repeatCount="indefinite" />
-                <animate attributeName="y" values="0;50" dur="4s" repeatCount="indefinite" />
-                <rect width="50" height="50" fill="#4f2565ff"></rect>
-                <rect x="50" y="50" width="50" height="50" fill="#4f2565ff"></rect>
-                <rect x="0" y="50" width="50" height="50" fill="#8e539dff"></rect>
-                <rect x="50" y="" width="50" height="50" fill="#8e539dff"></rect>
-            </pattern>
-            <pattern id="checkerboard2" width="100" height="100" patternTransform='scale(1) rotate(0)'
-                patternUnits="userSpaceOnUse">
-                <animate attributeName="x" values="0;-50" dur="4s" repeatCount="indefinite" />
-                <animate attributeName="y" values="0;50" dur="4s" repeatCount="indefinite" />
-                <rect width="50" height="50" fill="#4f2565ff"></rect>
-                <rect x="50" y="50" width="50" height="50" fill="#4f2565ff"></rect>
-                <rect x="0" y="50" width="50" height="50" fill="#8e539dff"></rect>
-                <rect x="50" y="" width="50" height="50" fill="#8e539dff"></rect>
-            </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#checkerboard" class="button" />
-    </svg>
+    <div class="layout-wrapper">
+        
+        <!-- Hidden Radio Buttons to track state -->
+        <input type="radio" name="nav-group" id="nav-close" class="nav-state">
+        <input type="radio" name="nav-group" id="nav-about" class="nav-state">
+        <input type="radio" name="nav-group" id="nav-games" class="nav-state">
+        <input type="radio" name="nav-group" id="nav-contact" class="nav-state">
 
-    <!-- 
-        Mask in front of game. We want to draw a full-screen fill with a circle cut out of the middle-right of it.
-        The position of this should change based on window size, when ratio becomes too 'vertical' move it to the bottom of the display. 
-    -->
-
-    <div class="game click-through" style="
-    position: fixed; 
-    left: 0%; right: 0%; 
-    top: 0%; bottom: 0%;">
-        <div id="unity-container" class="click-through" style="
-    position: fixed; 
-    left: 0%; right: 0%; 
-    top: 0%; bottom: 0%;">
-            <canvas id="unity-canvas" class="click-through-end" tabindex="0"
-                style="width: 100%; height: 100%;"></canvas>
-        </div>
-        <div id="unity-fullscreen-button" style="display: none;
-        position: fixed; 
-        left: 0%;
-        bottom: 0%;"></div>
-    </div>
-
-    <div class="edge-hug-right-bottom disable-on-game-start">
-        <svg width="60vmin" height="60vmin" viewbox="0 0 100 100" style="overflow: visible;">
-
+        <!-- Left Sidebar Structure (Main Screen on Mobile) -->
+        <aside class="sidebar">
             
-	        <path fill="#8e539dff" class="expand-on-game-start disable-on-game-start" d="M 0 -100 A 1 1 0 0 0 0 100 L 0 400 A 1 1 0 0 1 0 -400 A 1 1 0 0 1 0 400 A 1 1 0 0 1 0 100 A 1 1 0 0 0 0 -100" />
+            <div class="logo-area">
+                <!-- Replace with your actual logo asset -->
+                <img src="/resources/images/radio13logo.png" alt="RADIO 13" class="logo">
+                <div class="logo-text">RADIO 13</div>
+            </div>
+
+            <nav class="main-nav">
+                <label for="nav-about" class="nav-btn">ABOUT</label>
+                <label for="nav-games" class="nav-btn">GAMES</label>
+                <label for="nav-contact" class="nav-btn">CONTACT</label>
+            </nav>
+
+            <footer class="sidebar-footer">
+                <div class="social-links">
+                    <!-- Replace with your actual social icon assets -->
+                    <a href="#"><img src="/resources/images/youtube.png" alt="YouTube"></a>
+                    <a href="#"><img src="/resources/images/instagram.png" alt="Instagram"></a>
+                    <a href="#"><img src="/resources/images/facebook.png" alt="Facebook"></a>
+                    <a href="#"><img src="/resources/images/x.png" alt="X"></a>
+                    <a href="#"><img src="/resources/images/bluesky.svg" alt="Bluesky"></a>
+                </div>
+                <p class="attribution">Attribution stuff that is really long, etc etc etc etc etc etc etc</p>
+            </footer>
+
+        </aside>
+
+        <!-- Right Content Area (Slides in when a radio is checked) -->
+        <main class="content-slider">
             
-            <!-- 
-            <circle class="expand-on-game-start" id="game-mask" r="100" fill="url(#checkerboard)" /> 
-             -->
+            <!-- Close Button -->
+            <label for="nav-close" class="close-btn">&times;</label>
 
-            <g class="button-loading" id="game-button" onclick="gameButtonPress()">
-                <circle class="shrink-on-game-start" r="40" fill="#8e539dff" />
-                <circle class="shrink-on-game-start button-outline" r="38" fill="transparent" stroke-width="2" />
-            </g>
+            <div class="content-panel panel-about">
+                <h1 class="content-title">Content: About</h1>
+                <!-- Your About content goes here -->
+                <p>Welcome to the about section.</p>
+            </div>
 
-            <!-- Hide loading cover until game has been loaded-->
-            <g id="unity-loading-cover" transform="rotate(180 0 0)" class="rotate-hug-right-bottom"
-                style="display: none;">
-                <!-- Loading arc: draw an arc from 10deg -> 80deg at radius 70 (inside the annulus between r=100 and r=40) -->
-                <path transform="rotate(-60 0 0)" d="M -75 0 L -65 0" fill="none" stroke="#f5b42a" stroke-width="5"
-                    stroke-linecap="round" class="loading-start-arc" />
-                <path transform="rotate(-90 0 0)" d="M 60.6 -35 A -70 -70 0 0 0 -60.6 -35" fill="none" stroke="#f5b42a"
-                    stroke-width="5" stroke-linecap="round" id="unity-loading-bar" class="loading-arc" />
-                <path transform="rotate(60 0 0)" d="M -75 0 L -65 0" fill="none" stroke="#f5b42a" stroke-width="5"
-                    stroke-linecap="round" class="loading-end-arc" />
-            </g>
+            <div class="content-panel panel-games">
+                <h1 class="content-title">Content: Games</h1>
+                <!-- Your Games content goes here -->
+                <p>Here are our games.</p>
+            </div>
 
-            <!-- Create a group where 4 different 'GAME' text elements spin in a circle around (0,0) using an animation -->
-            <!-- The outer group recenters the origin to the middle of this SVG (50,50).
-                 The inner group 'spinner' is rotated with an SVG animateTransform so the
-                 four texts orbit the origin continuously. -->
-            <g id="spinner">
-                <g class="shrink-on-game-start click-through">
-                    <text x="0" y="-25" transform="rotate(0 0 0)" text-anchor="middle" dominant-baseline="middle"
-                        class="spinner-text prevent-select">SETTING UP</text>
-                    <text x="0" y="-25" transform="rotate(120 0 0)" text-anchor="middle" dominant-baseline="middle"
-                        class="spinner-text prevent-select">SETTING UP</text>
-                    <text x="0" y="-25" transform="rotate(240 0 0)" text-anchor="middle" dominant-baseline="middle"
-                        class="spinner-text prevent-select">SETTING UP</text>
-                </g>
-            </g>
-        </svg>
+            <div class="content-panel panel-contact">
+                <h1 class="content-title">Content: Contact</h1>
+                <!-- Your Contact content goes here -->
+                <p>Get in touch with us.</p>
+            </div>
+
+        </main>
+        
     </div>
 
-    <!-- Buttons for different UIs -->
-    <div class="area-hug-left-top ui-buttons vertical-layout-group disable-on-game-start">
-        <svg class="cable-lines-container button tab game-tab-donauts" style="width:max(30vmin,100%); height:20vmin;"
-            onclick="tabClicked(this)" onload="tabClicked(this)">
-            <defs>
-                <g id="cable-tip">
-                    <rect rx="0px" ry="0px" width="20px" height="10px" />
-                    <rect x="20px" y="2px" rx="0px" ry="0px" width="10px" height="5px" />
-                </g>
-            </defs>
-
-            <!-- Actual button fill -->
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="transparent" class="button-outline" />
-            <svg viewbox="0 0 100 100">
-                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%"
-                    class="button-text prevent-select">
-                    Donauts
-                </text>
-            </svg>
-            <svg viewbox="0 0 100 100" preserveAspectRatio="xMaxYMid meet">
-                <g class="tab-selected">
-                    <line x1="72" y1="20" x2="72" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="76" y1="20" x2="76" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="80" y1="20" x2="80" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="84" y1="20" x2="84" y2="80" stroke="#f5b42a" stroke-width="2" />
-                </g>
-            </svg>
-
-
-            <!-- 
-                'Cable' lines that animate and connect to each of the buttons 
-                Scale them with vmin so they adjust based on screen size.
-            <g viewbox="0 0 100 100">
-                <path class="cable-outline draw-line-over-time" d="m 100 0 q 22 60 -39 62 q -43 0 -40 44 q 3 41 24 37 q 21 -5 10 -16 q -30 -25 -34 22 q -8 63 13 40 q 28 -27 1 -29 q -58 -2 -75 70"/>
-                <path class="cable-line draw-line-over-time" id="cable-path-00" d="m 50 100 q 22 60 -39 62 q -43 0 -40 44 q 3 41 24 37 q 21 -5 10 -16 q -30 -25 -34 22 q -8 63 13 40 q 28 -27 1 -29 q -58 -2 -75 70"/>
-                <use href="#cable-tip" class="follow-path-over-time" path-to-follow="#cable-path-00" />
-            </g>
-             -->
-        </svg>
-        <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab game-tab-cell" onclick="tabClicked(this)">
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="transparent" class="button-outline" />
-
-            <svg viewbox="0 0 100 100">
-                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="300"
-                    class="button-text prevent-select">
-                    Boto.Cell
-                </text>
-            </svg>
-            <svg viewbox="0 0 100 100" preserveAspectRatio="xMaxYMid meet">
-                <g class="tab-selected">
-                    <line x1="72" y1="20" x2="72" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="76" y1="20" x2="76" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="80" y1="20" x2="80" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="84" y1="20" x2="84" y2="80" stroke="#f5b42a" stroke-width="2" />
-                </g>
-            </svg>
-        </svg>
-        <svg style="width:max(30vmin,100%);height:20vmin;" class="button tab" onclick="tabClicked(this)">
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="#4f2565ff" />
-            <rect rx="10px" ry="10px" width="100%" height="100%" fill="transparent" class="button-outline" />
-
-            <svg viewbox="0 0 100 100">
-                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="100%"
-                    class="button-text prevent-select">
-                    CONTACT
-                </text>
-            </svg>
-            <svg viewbox="0 0 100 100" preserveAspectRatio="xMaxYMid meet">
-                <g class="tab-selected">
-                    <line x1="72" y1="20" x2="72" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="76" y1="20" x2="76" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="80" y1="20" x2="80" y2="80" stroke="#f5b42a" stroke-width="2" />
-                    <line x1="84" y1="20" x2="84" y2="80" stroke="#f5b42a" stroke-width="2" />
-                </g>
-            </svg>
-        </svg>
-    </div>
-
-    <img src="resources/images/radio13logo.png" alt="Radio 13 Logo" style="width: 50px;">
-
-    <!-- GSAP Code Init. Loading directly from their source to keep repo small. -->
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathHelper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
-
-    <!-- Custom GSAP code sources. If I want reusable 'customized' gsap I'll reference it here. -->
-    <script src="resources/js/gsap.custom.js"></script>
-    <script src="resources/js/game-setup.js"></script>
-    <script src="resources/js/resize.js" async defer></script>
-    <script src="resources/js/daw-lines-over-time.js"></script>
-
-
-    <!-- Actual code for page.-->
-    <script src="" async defer>
-    </script>
-    <script>
-        addEventListener("DOMContentLoaded", (e) => {
-            gsap.registerPlugin(MotionPathHelper, MotionPathPlugin);
-            //gsap.to('.game', {
-            //    rotation: 3600,
-            //    duration: 60,
-            //    ease: 'bounce.out'
-            //});
-
-        });
-    </script>
 </body>
 
 </html>
