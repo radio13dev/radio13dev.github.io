@@ -15,10 +15,10 @@ body, html {
 
 }
 
-a:link {
+a.info:link {
     color: #8598ff;
 }
-a:visited {
+a.info:visited {
     color: #6795d1;
 }
 
@@ -139,6 +139,19 @@ a:visited {
     width: 100%;
 }
 
+.steam-wishlist {
+    width: min(100%, 420px);
+    padding: 14px 20px;
+    border: 2px solid #000000;
+    background: #ffffff;
+}
+
+.steam-wishlist:hover,
+.steam-wishlist:focus-visible {
+    background: #ffffff;
+    color: #e9e9e9;
+}
+
 .nav-btn {
     color: white;
     font-size: max(5vh, 3rem);
@@ -148,7 +161,6 @@ a:visited {
     letter-spacing: 2px;
     cursor: pointer;
     padding: 10px 40px;
-    transition: background-color 0.3s ease;
     text-align: center;
 }
 
