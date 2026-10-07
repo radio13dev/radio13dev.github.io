@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256mm"
+   height="256mm"
+   viewBox="0 0 255.99999 256"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   sodipodi:docname="tumblrsvg.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.76536274"
+     inkscape:cx="585.99665"
+     inkscape:cy="510.21559"
+     inkscape:window-width="2560"
+     inkscape:window-height="1417"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-26.888889,-39.6)">
+    <g
+       id="g21"
+       transform="matrix(1.6316103,0,0,1.6316103,-897.41835,37.478907)">
+	<path
+   class="st1"
+   d="m 645.1,1.3 c -43.4,0 -78.6,35.1 -78.6,78.3 0,43.2 35.1,78.5 78.6,78.5 43.2,0 78.3,-35.3 78.3,-78.5 C 723.5,36.2 688.3,1.3 645.1,1.3 Z"
+   id="path20"
+   style="fill:#001935" />
+
+	<path
+   class="st0"
+   d="m 651.2,97.3 c 0,7.1 3.6,9.5 9.2,9.5 h 8.1 v 18 h -15.3 c -13.7,0 -24,-7.1 -24,-24 V 73.7 H 616.7 V 59 c 13.7,-3.6 19.5,-15.4 20.2,-25.6 h 14.3 v 23.3 h 16.6 v 17 h -16.6 v 23.6"
+   id="path21"
+   style="fill:#ffffff" />
+
+</g>
+  </g>
+</svg>
