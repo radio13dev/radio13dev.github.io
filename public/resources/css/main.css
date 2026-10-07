@@ -16,16 +16,10 @@ body, html {
 }
 
 a:link {
-    color: #522f5b;
+    color: #8598ff;
 }
 a:visited {
-    color: #582c63;
-}
-a:link {
-    color: #522f5b;
-}
-a:link {
-    color: #582c63;
+    color: #6795d1;
 }
 
 
@@ -36,6 +30,7 @@ a:link {
   /* Add your explicit width/height here */
   width: 100%;
   height: 100vh;
+    height: 100dvh;
 }
 
 /* Add a new class to handle the full-page sizing */
@@ -45,6 +40,7 @@ a:link {
   left: 0;
   width: 100vw;
   height: 100vh;
+    height: 100dvh;
   z-index: -999; /* Sends it to the very back of the entire page */
 }
 
@@ -88,12 +84,15 @@ a:link {
     display: flex;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
 }
 
 /* --- Left Sidebar (Checkerboard) --- */
 .sidebar {
     width: 50%;
     height: 100%;
+    height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
